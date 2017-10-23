@@ -30,7 +30,7 @@
             return $this->_description;
         }
         
-        public function apply(\Inoma\Receipt\ItemsProductItem $product) {
+        public function apply(\Inoma\Receipt\Items\ProductItem $product) {
             $product->setFinalPrice($this->getFinalPrice(false) - $this->getValue());    
         }
         
