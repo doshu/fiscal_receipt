@@ -26,7 +26,7 @@
             return $this;
         }
         
-        public function getValue() {
+        public function getDescription() {
             return $this->_description;
         }
         
