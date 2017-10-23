@@ -31,7 +31,7 @@
         }
         
         public function apply(\Inoma\Receipt\Items\ProductItem $product) {
-            $product->setFinalPrice($this->getFinalPrice(false) - $this->getValue());    
+            $product->setFinalPrice($product->getFinalPrice(false) - $this->getValue());    
         }
         
     }

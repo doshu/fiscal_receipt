@@ -31,7 +31,7 @@
         }
         
         public function apply(\Inoma\Receipt\Receipt $receipt) {
-            $receipt->setTotal($this->getTotal(false) - $this->getValue());    
+            $receipt->setTotal($receipt->getTotal(false) - $this->getValue());    
         }
         
     }
