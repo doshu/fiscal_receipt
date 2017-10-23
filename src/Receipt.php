@@ -37,7 +37,7 @@
             return $this;
         }
         
-        public function getUuid($uuid) {
+        public function getUuid() {
             return $this->_uuid;
         }
         
