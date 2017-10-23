@@ -11,20 +11,20 @@
     class NumericCodeItem {
         
         protected $_publicType = 'numeric_code';
-        protected $_code = null;
+        protected $_value = null;
         
-        public function __construct($code) {
+        public function __construct($value) {
             parent::__construct();
-            $this->setCode($code);
+            $this->setValue($value);
         }    
         
-        public function setCode($code) {
-            $this->_code = $code;
+        public function setValue($value) {
+            $this->_value = $value;
             return $this;
         }
         
-        public function getCode() {
-            return $this->_code;
+        public function getValue() {
+            return $this->_value;
         }
     }
 

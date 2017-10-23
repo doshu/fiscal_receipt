@@ -3,14 +3,14 @@
     namespace Inoma\Receipt\Items;
     
     /**
-     * AlphanumericCodeItem
+     * StringItem
      * 
      * stampa di un codice alfanumerico
      *
      */
-    class AlphanumericCodeItem extends NumericCodeItem {
+    class StringItem extends NumericCodeItem {
         
-        protected $_publicType = 'aplhanumeric_code';
+        protected $_publicType = 'string';
         
     }
 

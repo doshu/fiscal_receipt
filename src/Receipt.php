@@ -3,10 +3,13 @@
     namespace Inoma\Receipt;
     
     use Inoma\Receipt\Utility\Uuid;
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
     
     use Inoma\Receipt\Parts\{ReceiptHeader, ReceiptBody, ReceiptFooter};
     
-    class Receipt {
+    class Receipt implements \JsonSerializable {
+    
+        use JsonSerializeTrait;
         
         protected $_uuid = null;
         protected $_created = null;
@@ -180,7 +183,7 @@
             $toPay = $this->getTotal();
             $paid = 0;
             foreach($this->getPayments() as $payment) {
-                $paid += $payment->getValue()??$toPay();
+                $paid += $payment->getValue()??$toPay;
             }
             return $paid;
         }
