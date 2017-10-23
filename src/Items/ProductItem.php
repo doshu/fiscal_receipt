@@ -4,7 +4,7 @@
     
     use Inoma\Receipt\Utility\Uuid;
     
-    class ProductItem extends Items {
+    class ProductItem extends Item {
         
         protected $_publicType = 'product';
         protected $_sku = null;
