@@ -4,9 +4,9 @@
     
     use Inoma\Receipt\Utility\Uuid;
     
-    use Inoma\Receipt\Parts\{ReceiptHeader, ReceiptBody, ReceiptFooter}
+    use Inoma\Receipt\Parts\{ReceiptHeader, ReceiptBody, ReceiptFooter};
     
-    class Receipt extends Utility\Entity {
+    class Receipt {
         
         protected $_uuid = null;
         protected $_created = null;
