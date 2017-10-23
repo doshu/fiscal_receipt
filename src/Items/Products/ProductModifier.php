@@ -4,7 +4,7 @@
     
     interface ProductModifier {
         
-        public function apply(\Inoma\Receipt\ItemsProductItem $product);
+        public function apply(\Inoma\Receipt\Items\ProductItem $product);
         
     }
 
