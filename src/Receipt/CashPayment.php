@@ -4,7 +4,7 @@
     
     class CashPayment extends PaymentMethod {
     
-        protected $_code = 'cash'
+        protected $_code = 'cash';
         
     }
 

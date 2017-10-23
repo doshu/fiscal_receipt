@@ -4,7 +4,7 @@
     
     class CheckPayment extends PaymentMethod {
     
-        protected $_code = 'check'
+        protected $_code = 'check';
         
     }
 

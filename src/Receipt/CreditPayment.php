@@ -4,7 +4,7 @@
     
     class CreditPayment extends PaymentMethod {
     
-        protected $_code = 'credit'
+        protected $_code = 'credit';
         
     }
 

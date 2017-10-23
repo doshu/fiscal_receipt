@@ -4,7 +4,7 @@
     
     class GenericPayment extends PaymentMethod {
     
-        protected $_code = 'generic'
+        protected $_code = 'generic';
         
     }
 
