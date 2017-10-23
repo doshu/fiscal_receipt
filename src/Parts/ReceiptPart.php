@@ -24,7 +24,7 @@
         }
         
         protected function _checkAllowedItem(\Inoma\Receipt\Items\Item $item) {
-            if((is_array($this->_allowedItems) && !in_array($item::class, $this->_allowedItems)) || $this->_allowedItems != '*') {
+            if((is_array($this->_allowedItems) && !in_array(get_class($item::class), $this->_allowedItems)) || $this->_allowedItems != '*') {
                 throw new NotAllowedItemException();
             }
             return true;
