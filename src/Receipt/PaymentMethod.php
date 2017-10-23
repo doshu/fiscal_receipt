@@ -5,7 +5,7 @@
     abstract class PaymentMethod {
     
         protected $_value = null;
-        protected $_code = null
+        protected $_code = null;
         
         public function __construct($value = null) {
             $this->setValue($value);
