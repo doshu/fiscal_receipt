@@ -3,7 +3,7 @@
     namespace Inoma\Receipt\Parts;
     
     
-    class ReceiptHeader {
+    class ReceiptHeader extends ReceiptPart {
         
         protected $_allowedItems = '*';
 

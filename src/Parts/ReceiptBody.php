@@ -3,7 +3,7 @@
     namespace Inoma\Receipt\Parts;
     
     
-    class ReceiptBody {
+    class ReceiptBody extends ReceiptPart {
         
         protected $_allowedItems = '*';
 
