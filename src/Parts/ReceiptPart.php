@@ -39,6 +39,10 @@
             return $this->_items();
         }
         
+        public function getItem($uuid) {
+            return $this->getItems()[$uuid]??null;
+        }
+        
         public function getItemsByType($type) {
             $filteredItems = [];
             foreach($this->_items as $item) {

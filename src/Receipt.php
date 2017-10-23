@@ -68,12 +68,28 @@
             return $this->_isFiscal;
         }
         
+        public function getHeader() {
+            return $this->_header;
+        }
+        
+        public function getBody() {
+            return $this->_body;
+        }
+        
+        public function getFooter() {
+            return $this->_footer;
+        }
+        
         public function addProduct(\Inoma\Receipt\Items\ProductItem $product) {
             $this->_body->appendItem($product);
         }
         
         public function deleteProduct($uuid) {
             $this->_body->deleteItem($uuid);
+        }
+        
+        public function getProduct($uuid) {
+            return $this->_body->getItem($uuid);
         }
         
         public function getProducts() {
