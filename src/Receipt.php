@@ -9,7 +9,9 @@
     
     class Receipt implements \JsonSerializable {
     
-        use JsonSerializeTrait;
+        use JsonSerializeTrait {
+            JsonSerializeTrait::jsonSerialize as _jsonSerialize;
+        };
         
         protected $_uuid = null;
         protected $_created = null;
@@ -186,6 +188,11 @@
                 $paid += $payment->getValue()??$toPay;
             }
             return $paid;
+        }
+        
+        
+        public function jsonSerialize() {
+            return ['total' => $this->getTotal(), 'paid' => $this->getPaid()] + _jsonSerialize();
         }
         
     }
