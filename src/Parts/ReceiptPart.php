@@ -36,7 +36,7 @@
         }
         
         public function getItems() {
-            return $this->_items();
+            return $this->_items;
         }
         
         public function getItem($uuid) {
