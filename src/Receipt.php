@@ -11,7 +11,7 @@
     
         use JsonSerializeTrait {
             JsonSerializeTrait::jsonSerialize as _jsonSerialize;
-        };
+        }
         
         protected $_uuid = null;
         protected $_created = null;
