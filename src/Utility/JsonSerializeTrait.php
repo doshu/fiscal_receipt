@@ -14,6 +14,7 @@
                 foreach ($props as $prop) {
                     $newName = $prop->getName();
                     $newName = $newName[0] == '_'?substr($newName, 1):$newName;
+                    $prop->setAccessible(true);
                     $return[$newName] = $prop->getValue();
                 }
             }
