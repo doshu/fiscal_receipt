@@ -16,6 +16,7 @@
                 $random(0, 0x3fff) | 0x8000,
                 $random(0, 65535),
                 $random(0, 65535),
+                $random(0, 65535)
             );
         }
     }
