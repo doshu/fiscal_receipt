@@ -21,9 +21,12 @@
         protected $_discounts = [];
         protected $_increases = [];
         
+        protected $_payments = [];
+        
         protected $_total = null;
         
         public function __construct() {
+        
            $this->setUuid(Uuid::create());
            $this->setCreated(time());
            
@@ -82,10 +85,12 @@
         
         public function addProduct(\Inoma\Receipt\Items\ProductItem $product) {
             $this->_body->appendItem($product);
+            return $this;
         }
         
         public function deleteProduct($uuid) {
             $this->_body->deleteItem($uuid);
+            return $this;
         }
         
         public function getProduct($uuid) {
@@ -98,6 +103,7 @@
         
         public function addDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             $this->_discounts[Uuid::create()] = $discount;
+            return $this;
         }
         
         public function getDiscounts() {
@@ -110,10 +116,12 @@
         
         public function deleteDiscount($uuid) {
             unset($this->_discounts[$uuid]);
+            return $this;
         }
         
         public function addIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
             $this->_increases[Uuid::create()] = $increase;
+            return $this;
         }
         
         public function getIncreases() {
@@ -126,6 +134,25 @@
         
         public function deleteIncrease($uuid) {
             unset($this->_increases[$uuid]);
+            return $this;
+        }
+        
+        public function addPayment(\Inoma\Receipt\Receipt\PaymentMethod $payment) {
+            $this->_payments[Uuid::create()] = $payment;
+            return $this;
+        }
+        
+        public function getPayments() {
+            return $this->_payments;
+        }
+        
+        public function getPayment($uuid) {
+            return $this->getPayments()[$uuid]??null;
+        }
+        
+        public function deletePayment($uuid) {
+            unset($this->_payments[$uuid]);
+            return $this;
         }
         
         public function getTotal($applyModifier = true) {
@@ -147,6 +174,15 @@
         public function setTotal($total) {
             $this->_total = $total;
             return $this;
+        }
+        
+        public function getPaid() {
+            $toPay = $this->getTotal();
+            $paid = 0;
+            foreach($this->getPayments() as $payment) {
+                $paid += $payment->getValue()??$toPay();
+            }
+            return $paid;
         }
         
     }
