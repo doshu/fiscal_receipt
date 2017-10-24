@@ -20,6 +20,7 @@
                 }
             }
             else {
+                return ['asd' => 1];
                 foreach($this->_expose as $prop) {
                     $newName = $prop[0] == '_'?substr($prop, 1):$prop;
                     $return[$newName] = $this->{$prop};
