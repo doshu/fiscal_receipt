@@ -8,7 +8,7 @@
     
         use JsonSerializeTrait;
     
-        protected $_value = null;
+        public $_value = null;
         protected $_code = null;
         
         public function __construct($value = null) {
