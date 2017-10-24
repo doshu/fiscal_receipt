@@ -4,11 +4,9 @@
 
     trait JsonSerializeTrait {
     
-        protected $_expose = '*';
-        
         public function jsonSerialize() {
             $return = [];
-            if($this->_expose == '*') {
+            if(!property_exists($this, '_expose') || $this->_expose == '*') {
                 $reflect = new \ReflectionClass($this);
                 $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
                 foreach ($props as $prop) {
