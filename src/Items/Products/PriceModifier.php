@@ -4,7 +4,7 @@
     
     use Inoma\Receipt\Utility\JsonSerializeTrait;
     
-    abstract class PriceModifier {
+    abstract class PriceModifier implements \JsonSerializable {
     
         use JsonSerializeTrait;
         

@@ -5,7 +5,7 @@
     use Inoma\Receipt\Exceptions\NotAllowedItemException;
     use Inoma\Receipt\Utility\JsonSerializeTrait;
     
-    abstract class ReceiptPart {
+    abstract class ReceiptPart implements \JsonSerializable {
     
         use JsonSerializeTrait;
         

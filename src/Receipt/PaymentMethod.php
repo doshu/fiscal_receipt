@@ -4,7 +4,7 @@
     
     use Inoma\Receipt\Utility\JsonSerializeTrait;
     
-    abstract class PaymentMethod {
+    abstract class PaymentMethod implements \JsonSerializable {
     
         use JsonSerializeTrait;
     
