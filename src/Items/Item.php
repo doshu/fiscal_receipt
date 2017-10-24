@@ -5,7 +5,7 @@
     use Inoma\Receipt\Utility\Uuid;
     use Inoma\Receipt\Utility\JsonSerializeTrait;
     
-    abstract class Item {
+    abstract class Item implements \JsonSerializable {
     
         use JsonSerializeTrait;
         
