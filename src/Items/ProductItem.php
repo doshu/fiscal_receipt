@@ -3,6 +3,7 @@
     namespace Inoma\Receipt\Items;
     
     use Inoma\Receipt\Utility\Uuid;
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
     
     class ProductItem extends Item {
     
