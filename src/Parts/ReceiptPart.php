@@ -3,11 +3,15 @@
     namespace Inoma\Receipt\Parts;
     
     use Inoma\Receipt\Exceptions\NotAllowedItemException;
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
     
     abstract class ReceiptPart {
+    
+        use JsonSerializeTrait;
         
         protected $_items = [];
         protected $_allowedItems = '*';
+        protected $_expose = ['_items'];
 
         public function appendItem(\Inoma\Receipt\Items\Item $item) {
             $this->_checkAllowedItem($item);

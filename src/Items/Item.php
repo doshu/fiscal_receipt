@@ -3,8 +3,11 @@
     namespace Inoma\Receipt\Items;
     
     use Inoma\Receipt\Utility\Uuid;
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
     
     abstract class Item {
+    
+        use JsonSerializeTrait;
         
         protected $_uuid = null;
         protected $_publicType = null;

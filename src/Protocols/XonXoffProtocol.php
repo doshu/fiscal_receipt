@@ -121,8 +121,33 @@
             }
         }
         
-        public function printOperator($operator) {
-            return sprintf('"%s%s"@', 'Operatore:', $operator);
+        public function printOperator(\Inoma\Receipt\Items\OperatorItem $operator) {
+            return sprintf('"%s%s"@', 'Operatore:', $operator->getLabel());
+        }
+        
+        public function printClient(\Inoma\Receipt\Items\ClientItem $client) {
+            $cmds = [];
+            if($operator->getLabel()) {
+                $cmds[] = sprintf('"%s"@38F', $operator->getLabel());
+            }
+            if($operator->getCode()) {
+                $cmds[] = sprintf('"Codice Cliente: %s"@38F', $operator->getCode());
+            }
+            if($operator->getCardCode()) {
+                $cmds[] = sprintf('"Tessera N°: %s"@38F', $operator->getCardCode());
+            }
+            if($operator->getCardCode()) {
+                $cmds[] = sprintf('"Tessera N°: %s"@38F', $operator->getCardCode());
+            }
+            
+            if($operator->getCf()) {
+                $cmds[] = sprintf('"%s"@39F', $operator->getCf());
+            }
+            if($operator->getVat()) {
+                $cmds[] = sprintf('"%s"@39F', $operator->getVat());
+            }
+            
+            return implode("", $cmds);
         }
         
         public function sendCommand($command) {

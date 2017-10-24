@@ -22,7 +22,12 @@
                 $commands[] = $this->printPaymentMethod($payment);
             }
             
-            $commands[] = $this->printOperator($receipt->getOperator());
+            if($receipt->getOperator()) {
+                $commands[] = $this->printOperator($receipt->getOperator());
+            }
+            if($receipt->getClient()) {
+                $commands[] = $this->printClient($receipt->getClient());
+            }
             
             foreach($receipt->getFooter()->getItems() as $item) {
                 $commands[] = $this->printItem($item);
@@ -61,6 +66,12 @@
                     break;
                 case \Inoma\Receipt\Items\BarcodeItem::class:
                     return $this->printBarcode($item);
+                    break;
+                case \Inoma\Receipt\Items\OperatorItem::class:
+                    return $this->printOperator($item);
+                    break;
+                case \Inoma\Receipt\Items\ClientItem::class:
+                    return $this->printClient($item);
                     break;
                 default:
                     throw new NotImplementedException(get_class($item).' printing not implemented yet');

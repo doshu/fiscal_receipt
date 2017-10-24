@@ -26,6 +26,8 @@
         
         public function printOperator();
         
+        public function printClient();
+        
         public function sendCommand($command);
         
         public function cancel();

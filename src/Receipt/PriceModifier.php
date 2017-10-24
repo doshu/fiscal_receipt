@@ -2,8 +2,13 @@
 
     namespace Inoma\Receipt\Receipt;
     
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
+    
     abstract class PriceModifier {
+    
+        use JsonSerializeTrait;
         
+        protected $_code = null;
         protected $_value = null;
         protected $_description = null;
         

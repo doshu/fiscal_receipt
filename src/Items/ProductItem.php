@@ -5,6 +5,10 @@
     use Inoma\Receipt\Utility\Uuid;
     
     class ProductItem extends Item {
+    
+        use JsonSerializeTrait {
+            JsonSerializeTrait::jsonSerialize as _jsonSerialize;
+        }
         
         protected $_publicType = 'product';
         protected $_sku = null;
@@ -110,6 +114,10 @@
         public function setFinalPrice($finalPrice) {
             $this->_finalPrice = $finalPrice;
             return $this;
+        }
+        
+        public function jsonSerialize() {
+            return ['finalPrice' => $this->getFinalPrice()] + $this->_jsonSerialize();
         }
     }
 

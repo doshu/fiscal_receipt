@@ -2,7 +2,11 @@
 
     namespace Inoma\Receipt\Receipt;
     
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
+    
     abstract class PaymentMethod {
+    
+        use JsonSerializeTrait;
     
         protected $_value = null;
         protected $_code = null;

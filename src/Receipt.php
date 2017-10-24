@@ -16,6 +16,7 @@
         protected $_uuid = null;
         protected $_created = null;
         protected $_operator = null;
+        protected $_client = null;
         
         protected $_isFiscal = true;
         
@@ -27,6 +28,7 @@
         protected $_increases = [];
         
         protected $_payments = [];
+        protected $_credits = null;
         
         protected $_total = null;
         
@@ -58,13 +60,22 @@
             return $this->_created;
         }
         
-        public function setOperator($operator) {
+        public function setOperator(\Inoma\Receipt\Items\OperatoreItem $operator) {
             $this->_operator = $operator;
             return $this;
         }
         
         public function getOperator() {
             return $this->_operator;
+        }
+        
+        public function setClient(\Inoma\Receipt\Items\ClientItem $client) {
+            $this->_client = $client;
+            return $this;
+        }
+        
+        public function getClient() {
+            return $this->_client;
         }
         
         public function setIsFiscal($isFiscal) {
@@ -189,6 +200,15 @@
             }
             return $paid;
         }
+        
+        public function setCredits($credits) {
+            $this->_credits = $credits;
+            return $this;
+        }
+        
+        public function getCredits() {
+            return $this->_credits;
+        }   
         
         
         public function jsonSerialize() {
