@@ -26,7 +26,7 @@
         }
         
         public function getPublicType() {
-            return $this->_publicType();
+            return $this->_publicType;
         }
     }
 
