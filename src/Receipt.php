@@ -218,7 +218,7 @@
         
         
         public function jsonSerialize() {
-            return ['total' => $this->getTotal(), 'paid' => $this->getPaid()] + $this->_jsonSerialize();
+            return ['total' => $this->getTotal(true), 'paid' => $this->getPaid()] + $this->_jsonSerialize();
         }
         
     }
