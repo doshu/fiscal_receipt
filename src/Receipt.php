@@ -13,6 +13,8 @@
             JsonSerializeTrait::jsonSerialize as _jsonSerialize;
         }
         
+        protected $_receiptType = 'sales';
+        
         protected $_uuid = null;
         protected $_created = null;
         protected $_operator = null;
@@ -40,6 +42,10 @@
            $this->_header = new ReceiptHeader();
            $this->_body = new ReceiptBody();
            $this->_footer = new ReceiptFooter();
+        }
+        
+        public function getReceiptType() {
+            return $this->_receiptType;
         }
         
         public function setUuid($uuid) {

@@ -24,6 +24,10 @@
         public function getUuid() {
             return $this->_uuid;
         }
+        
+        public function getPublicType() {
+            return $this->_publicType();
+        }
     }
 
 ?>
