@@ -154,20 +154,20 @@
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client) {
             $cmds = [];
-            if($operator->getLabel()) {
+            if($client->getLabel()) {
                 $cmds[] = sprintf('"%s"@38F', substr($client->getLabel(), 0, $this->_maxDescLength));
             }
-            if($operator->getCode()) {
+            if($client->getCode()) {
                 $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($client->getCode(), 0, $this->_maxDescLength - 14));
             }
-            if($operator->getCardCode()) {
+            if($client->getCardCode()) {
                 $cmds[] = sprintf('"Tessera N°: %s"@38F', substr($client->getCardCode(), 0, $this->_maxDescLength - 12));
             }
             
-            if($operator->getCf()) {
+            if($client->getCf()) {
                 $cmds[] = sprintf('"%s"@39F', $client->getCf());
             }
-            if($operator->getVat()) {
+            if($client->getVat()) {
                 $cmds[] = sprintf('"%s"@39F', $client->getVat());
             }
             
