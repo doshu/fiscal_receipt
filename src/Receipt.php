@@ -167,7 +167,7 @@
             $payments = $this->_payments;
             $hasNoAmountPayment = false;
             $last = end($payments);
-            if(empty($last->getValue())) {
+            if($last && empty($last->getValue())) {
                 $hasNoAmountPayment = true;
             }
             if(empty($payment->getValue()) && !$hasNoAmountPayment) {
