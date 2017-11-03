@@ -32,7 +32,32 @@
             $this->_printer = $printer;
         }
         
-        public function printProduct(\Inoma\Receipt\Items\ProductItem $product);
+        public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
+            $cmds = []:
+            $cmds[] = sprintf('"%s"%s*%sH%sR', $product->getDescription(), $product->getQty(), $product->getPrice(), 1);
+            foreach($product->getDiscounts() as $discount) {
+                switch($discount->getCode()) {
+                    case 'byPercentage':
+                        $cmds[] = sprintf('%d*1M', $discount->getValue());
+                        break;
+                    case 'byValue':
+                        $cmds[] = sprintf('%sH3M', $discount->getValue());
+                        break;
+                }
+            }
+            foreach($product->getIncreases() as $increase) {
+                switch($increase->getCode()) {
+                    case 'byPercentage':
+                        $cmds[] = sprintf('%d*5M', $increase->getValue());
+                        break;
+                    case 'byValue':
+                        $cmds[] = sprintf('%sH7M', $increase->getValue());
+                        break;
+                }
+            }
+            
+            return implode("\n", $cmds);
+        }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             return sprintf('"%s"@', $string->getValue());
@@ -147,7 +172,7 @@
                 $cmds[] = sprintf('"%s"@39F', $operator->getVat());
             }
             
-            return implode("", $cmds);
+            return implode("\n", $cmds);
         }
         
         public function sendCommand($command) {

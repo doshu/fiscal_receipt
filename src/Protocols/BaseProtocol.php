@@ -6,7 +6,7 @@
     
     abstract class BaseProtocol {
     
-        public $debug = 0;
+        public $debug = false;
     
         public function printReceipt(\Inoma\Receipt\Receipt $receipt) {
             $commands = new CommandsCollection();
@@ -36,7 +36,7 @@
             $this->beforePrintReceipt($receipt, $commands);
             
             if($this->debug) {
-                print_r($commands->getCommands());
+                return $commands->getCommands();
             }
             
             foreach($commands->getCommands() as $command) {
