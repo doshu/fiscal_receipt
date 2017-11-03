@@ -155,20 +155,20 @@
         public function printClient(\Inoma\Receipt\Items\ClientItem $client) {
             $cmds = [];
             if($operator->getLabel()) {
-                $cmds[] = sprintf('"%s"@38F', substr($operator->getLabel(), 0, $this->_maxDescLength));
+                $cmds[] = sprintf('"%s"@38F', substr($client->getLabel(), 0, $this->_maxDescLength));
             }
             if($operator->getCode()) {
-                $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($operator->getCode(), 0, $this->_maxDescLength - 14));
+                $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($client->getCode(), 0, $this->_maxDescLength - 14));
             }
             if($operator->getCardCode()) {
-                $cmds[] = sprintf('"Tessera N°: %s"@38F', substr($operator->getCardCode(), 0, $this->_maxDescLength - 12));
+                $cmds[] = sprintf('"Tessera N°: %s"@38F', substr($client->getCardCode(), 0, $this->_maxDescLength - 12));
             }
             
             if($operator->getCf()) {
-                $cmds[] = sprintf('"%s"@39F', $operator->getCf());
+                $cmds[] = sprintf('"%s"@39F', $client->getCf());
             }
             if($operator->getVat()) {
-                $cmds[] = sprintf('"%s"@39F', $operator->getVat());
+                $cmds[] = sprintf('"%s"@39F', $client->getVat());
             }
             
             return implode("\n", $cmds);
