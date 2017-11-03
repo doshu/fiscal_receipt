@@ -13,6 +13,8 @@
         
         protected $_printer = null;
         
+        private $_maxDescLength = 22;
+        
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection) {
             if(!$receipt->isFiscal()) {
                 array_unshift($commandsCollection, 'j');
@@ -34,7 +36,7 @@
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
             $cmds = [];
-            $cmds[] = sprintf('"%s"%s*%sH%sR', $product->getDescription(), $product->getQty(), $product->getPrice(), 1);
+            $cmds[] = sprintf('"%s"%s*%sH%sR', substr($product->getDescription(), 0, $this->_maxDescLength), $product->getQty(), $product->getPrice(), 1);
             foreach($product->getDiscounts() as $discount) {
                 switch($discount->getCode()) {
                     case 'byPercentage':
@@ -60,7 +62,7 @@
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
-            return sprintf('"%s"@', $string->getValue());
+            return sprintf('"%s"@', substr($string->getValue(), 0, $this->_maxDescLength));
         }
         
         public function printNumericCode(\Inoma\Receipt\Items\NumericCodeItem $numericCode) {
@@ -77,13 +79,13 @@
         public function printBarcode(\Inoma\Receipt\Items\BarcodeItem $barcode) {
             switch(strtolower($barcode->getType())) {
                 case 'ean13':
-                    if(strlen($barcode->getCode()) < 12 strlen($barcode->getCode()) > 13) {
+                    if(strlen($barcode->getCode()) < 12  || strlen($barcode->getCode()) > 13) {
                         throw new InvalidValueException('Ean13 barcode '.$barcode->getCode().' is not valid');
                     }
                     return sprintf('"%s"1Z', $barcode->getCode());
                     break;
                 case 'ean8':
-                    if(strlen($barcode->getCode()) < 7 strlen($barcode->getCode()) > 8) {
+                    if(strlen($barcode->getCode()) < 7 || strlen($barcode->getCode()) > 8) {
                         throw new InvalidValueException('Ean8 barcode '.$barcode->getCode().' is not valid');
                     }
                     return sprintf('"%s"2Z', $barcode->getCode());
@@ -147,22 +149,19 @@
         }
         
         public function printOperator(\Inoma\Receipt\Items\OperatorItem $operator) {
-            return sprintf('"%s%s"@', 'Operatore:', $operator->getLabel());
+            return sprintf('"%s%s"@', 'Operatore:', substr($operator->getLabel(), 0, $this->_maxDescLength - 10));
         }
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client) {
             $cmds = [];
             if($operator->getLabel()) {
-                $cmds[] = sprintf('"%s"@38F', $operator->getLabel());
+                $cmds[] = sprintf('"%s"@38F', substr($operator->getLabel(), 0, $this->_maxDescLength));
             }
             if($operator->getCode()) {
-                $cmds[] = sprintf('"Codice Cliente: %s"@38F', $operator->getCode());
+                $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($operator->getCode(), 0, $this->_maxDescLength - 14));
             }
             if($operator->getCardCode()) {
-                $cmds[] = sprintf('"Tessera N°: %s"@38F', $operator->getCardCode());
-            }
-            if($operator->getCardCode()) {
-                $cmds[] = sprintf('"Tessera N°: %s"@38F', $operator->getCardCode());
+                $cmds[] = sprintf('"Tessera N°: %s"@38F', substr($operator->getCardCode(), 0, $this->_maxDescLength - 12));
             }
             
             if($operator->getCf()) {
