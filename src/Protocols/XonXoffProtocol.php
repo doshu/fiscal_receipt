@@ -33,7 +33,7 @@
         }
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
-            $cmds = []:
+            $cmds = [];
             $cmds[] = sprintf('"%s"%s*%sH%sR', $product->getDescription(), $product->getQty(), $product->getPrice(), 1);
             foreach($product->getDiscounts() as $discount) {
                 switch($discount->getCode()) {
