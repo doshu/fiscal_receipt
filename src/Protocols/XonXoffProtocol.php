@@ -16,7 +16,7 @@
         private $_maxDescLength = 22;
         
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection) {
-            if(!$receipt->isFiscal()) {
+            if(!$receipt->getIsFiscal()) {
                 array_unshift($commandsCollection, 'j');
                 array_push($commandsCollection, 'J');
             }
