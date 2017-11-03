@@ -24,9 +24,9 @@
         
         public function printPaymentMethod(\Inoma\Receipt\Receipt\PaymentMethod $payment);
         
-        public function printOperator();
+        public function printOperator(\Inoma\Receipt\Items\OperatorItem $operator);
         
-        public function printClient();
+        public function printClient(\Inoma\Receipt\Items\ClientItem $client);
         
         public function sendCommand($command);
         
