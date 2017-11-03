@@ -40,10 +40,14 @@
             }
             
             foreach($commands->getCommands() as $command) {
-                $this->sendCommand($command);
+                if(!$this->sendCommand($command)) {
+                    return false;
+                }
             }
             
             $this->afterPrintReceipt($receipt, $commands);
+            
+            return true;
         }
         
         abstract public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection);

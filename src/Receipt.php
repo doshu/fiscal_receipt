@@ -164,7 +164,37 @@
         }
         
         public function addPayment(\Inoma\Receipt\Receipt\PaymentMethod $payment) {
-            $this->_payments[Uuid::create()] = $payment;
+            $payments = $this->_payments;
+            $hasNoAmountPayment = false;
+            $last = end($payments);
+            if(empty($last->getValue()) {
+                $hasNoAmountPayment = true;
+            }
+            if(empty($payment->getValue()) && !$hasNoAmountPayment) {
+                //only one payment is allowed without amount
+                return false;
+            }
+            
+            if(empty($payment->getValue()) || !$hasNoAmountPayment) {
+                //no amount payment always on bottom
+                $this->_payments[Uuid::create()] = $payment;
+            }
+            else {
+                $count = count($payments);
+                $newPayments = [];
+                $i = 0;
+                foreach($payments as $uuid => $_payment) {
+                    if($i++ < $count - 1) {
+                        $newPayments[$uuid] = $_payment;
+                    } 
+                    else {
+                        $newPayments[Uuid::create()] = $payment;
+                        $newPayments[$uuid] = $_payment;
+                    }
+                }
+                $this->_payments = $newPayments;
+            }
+            
             return $this;
         }
         
@@ -207,6 +237,7 @@
             $paid = 0;
             foreach($this->getPayments() as $payment) {
                 $paid += $payment->getValue()??$toPay;
+                $toPay -= $paid;
             }
             return $paid;
         }

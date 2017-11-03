@@ -10,6 +10,7 @@
     
         protected $_value = null;
         protected $_code = null;
+        protected $_hasChange = true;
         
         public function __construct($value = null) {
             $this->setValue($value);
@@ -26,6 +27,10 @@
         
         public function getCode() {
             return $this->_code;
+        }
+        
+        public function getHasChange() {
+            return $this->_hasChange;
         }
         
     }
