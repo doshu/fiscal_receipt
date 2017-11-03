@@ -84,6 +84,10 @@
             return $this->_client;
         }
         
+        public function deleteClient() {
+            return $this->_client = null;
+        }
+        
         public function setIsFiscal($isFiscal) {
             $this->_isFiscal = $isFiscal;
             return $this;
