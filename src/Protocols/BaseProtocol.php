@@ -55,7 +55,7 @@
                 case \Inoma\Receipt\Items\ProductItem::class:
                     return $this->printProduct($item);
                     break;
-                case \Inoma\Receipt\Items\StringItem:class:
+                case \Inoma\Receipt\Items\StringItem::class:
                     return $this->printString($item);
                     break;
                 case \Inoma\Receipt\Items\NumericCodeItem::class:
