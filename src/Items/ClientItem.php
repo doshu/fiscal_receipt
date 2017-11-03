@@ -4,7 +4,7 @@
     
     use Inoma\Receipt\Utility\Uuid;
     
-    class ClientItem extends Items {
+    class ClientItem extends Item {
         
         protected $_publicType = 'client';
         protected $_code = null;
@@ -13,7 +13,13 @@
         protected $_vat = null;
         protected $_label = null;
         
-        public function __construct($code = null, $cardCode = null, $cf = null, $vat = null, $label = null) {
+        public function __construct(
+            $code = null, 
+            $cardCode = null, 
+            $cf = null, 
+            $vat = null, 
+            $label = null
+        ) {
             parent::__construct();
             $this->setCode($code);
             $this->setCardCode($cardCode);
