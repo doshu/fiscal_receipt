@@ -2,7 +2,7 @@
 
     namespace Inoma\Receipt\Protocols;
     
-    class CommandsCollection extends \ArrayAccess, \Countable {
+    class CommandsCollection implements \ArrayAccess, \Countable {
     
         protected $_commands = [];
         
