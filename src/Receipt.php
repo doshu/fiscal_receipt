@@ -170,7 +170,7 @@
             if($last && empty($last->getValue())) {
                 $hasNoAmountPayment = true;
             }
-            if(empty($payment->getValue()) && !$hasNoAmountPayment) {
+            if(empty($payment->getValue()) && $hasNoAmountPayment) {
                 //only one payment is allowed without amount
                 return false;
             }
