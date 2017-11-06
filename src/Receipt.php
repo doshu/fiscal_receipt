@@ -172,7 +172,7 @@
             }
             if(empty($payment->getValue()) && $hasNoAmountPayment) {
                 //only one payment is allowed without amount
-                throw new Exception\NotAllowedItemException();
+                throw new Exceptions\NotAllowedItemException();
             }
             
             if(empty($payment->getValue()) || !$hasNoAmountPayment) {
@@ -195,12 +195,7 @@
                 $this->_payments = $newPayments;
             }
             
-            $toPay = $this->getTotal();
-            foreach($this->getPayments() as &$payment) {
-                $paid = $payment->getValue()??$toPay;
-                $payment->setPaid($paid);
-                $toPay -= $paid;
-            }
+            $this->_rebuildPayments();
             
             return $this;
         }
@@ -215,7 +210,17 @@
         
         public function deletePayment($uuid) {
             unset($this->_payments[$uuid]);
+            $this->_rebuildPayments();
             return $this;
+        }
+        
+        protected function _rebuildPayments() {
+            $toPay = $this->getTotal();
+            foreach($this->getPayments() as &$payment) {
+                $paid = $payment->getValue()??$toPay;
+                $payment->setPaid($paid);
+                $toPay -= $paid;
+            }
         }
         
         public function getTotal($applyModifier = true) {
