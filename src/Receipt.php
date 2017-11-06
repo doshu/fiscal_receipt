@@ -127,6 +127,10 @@
             return $this->_body->getItemsByType(\Inoma\Receipt\Items\ProductItem::class);
         }
         
+        public function getReturns() {
+            return $this->_body->getItemsByType(\Inoma\Receipt\Items\ReturnItem::class);
+        }
+        
         public function addDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             $this->_discounts[Uuid::create()] = $discount;
             return $this;
@@ -234,6 +238,10 @@
                 }
                 foreach($this->getIncreases() as $increase) {
                     $increase->apply($this);
+                }
+                
+                foreach($this->getReturns() as $return) {
+                    $this->setTotal($this->_total - $return->getTotal());
                 }
             }
             return $this->_total;

@@ -1,22 +1,20 @@
 <?php
 
     namespace Inoma\Receipt\Items;
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
     
     /**
-     * CancellationCodeItem
+     * ReturnItem
      * 
-     * Storno di un elemento
+     * reso di un prodotto
      *
      * TODO
      */
-    class CancellationCodeItem extends Items {
+    class ReturnItem extends ProductItem {
         
-        protected $_publicType = 'cancellation';
+        protected $_publicType = 'return';
         
-        protected $_sku = null;
-        protected $_price = null;
-        protected $_qty = null;
-        protected $_description = null;
+        use JsonSerializeTrait;
         
         public function __construct($sku = null, $price = null, $qty = 0, $description = null) {
             parent::__construct();
