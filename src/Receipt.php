@@ -261,7 +261,7 @@
             foreach($payments as $payment) {
                 $sum[$payment->getHasChange()?'change':'nochange'] += $payment->getPaid();
             }
-            return $sum['change'] + $sum['nochange'] - max(0, $sum['nochange'] - $total) - $total;
+            return max(0, round($sum['change'] + $sum['nochange'] - max(0, $sum['nochange'] - $total) - $total, 2));
         }
         
         public function setCredits($credits) {
