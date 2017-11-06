@@ -12,6 +12,7 @@
         protected $_code = null;
         protected $_hasChange = true;
         protected $_paid = null;
+        protected $_allowNoAmount = true;
         
         public function __construct($value = null) {
             $this->setValue($value);
@@ -32,6 +33,10 @@
         
         public function getHasChange() {
             return $this->_hasChange;
+        }
+        
+        public function getAllowNoAmount() {
+            return $this->_allowNoAmount;
         }
         
         /**
