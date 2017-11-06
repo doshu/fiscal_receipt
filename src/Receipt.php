@@ -196,9 +196,8 @@
             }
             
             $toPay = $this->getTotal();
-            $paid = 0;
             foreach($this->getPayments() as &$payment) {
-                $paid += $payment->getValue()??$toPay;
+                $paid = $payment->getValue()??$toPay;
                 $payment->setPaid($paid);
                 $toPay -= $paid;
             }
