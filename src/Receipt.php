@@ -241,7 +241,7 @@
                 }
                 
                 foreach($this->getReturns() as $return) {
-                    $this->setTotal($this->_total - $return->getTotal());
+                    $this->setTotal($this->_total - $return->getPrice());
                 }
             }
             return $this->_total;
