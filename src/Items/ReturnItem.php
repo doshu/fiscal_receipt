@@ -8,13 +8,14 @@
      * 
      * reso di un prodotto
      *
-     * TODO
      */
     class ReturnItem extends ProductItem {
         
         protected $_publicType = 'return';
         
-        use JsonSerializeTrait;
+        use JsonSerializeTrait {
+            JsonSerializeTrait::jsonSerialize as _jsonSerialize;
+        }
         
         public function __construct($sku = null, $price = null, $qty = 0, $description = null) {
             parent::__construct();
@@ -59,6 +60,16 @@
         
         public function getDescription() {
             return $this->_description;
+        }
+        
+        
+        public function getFinalPrice($applyModifier = true) {
+            $this->setFinalPrice($this->getPrice() * $this->getQty());
+            return $this->_finalPrice;
+        }
+        
+        public function jsonSerialize() {
+            return ['finalPrice' => $this->getFinalPrice(true)] + $this->_jsonSerialize();
         }
         
     }
