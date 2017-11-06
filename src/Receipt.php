@@ -172,7 +172,7 @@
             }
             if(empty($payment->getValue()) && $hasNoAmountPayment) {
                 //only one payment is allowed without amount
-                return false;
+                throw new Exception\NotAllowedItemException();
             }
             
             if(empty($payment->getValue()) || !$hasNoAmountPayment) {
@@ -193,6 +193,14 @@
                     }
                 }
                 $this->_payments = $newPayments;
+            }
+            
+            $toPay = $this->getTotal();
+            $paid = 0;
+            foreach($this->getPayments() as &$payment) {
+                $paid += $payment->getValue()??$toPay;
+                $payment->setPaid($paid);
+                $toPay -= $paid;
             }
             
             return $this;

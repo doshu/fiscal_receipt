@@ -11,6 +11,7 @@
         protected $_value = null;
         protected $_code = null;
         protected $_hasChange = true;
+        protected $_paid = null;
         
         public function __construct($value = null) {
             $this->setValue($value);
@@ -31,6 +32,23 @@
         
         public function getHasChange() {
             return $this->_hasChange;
+        }
+        
+        /**
+         * setPaid
+         * 
+         * used from Receipt to set the real amount paid
+         *
+         * @param number $value
+         * @return number
+         */
+        public function setPaid($value) {
+            $this->_paid = $value;
+            return $this;
+        }
+        
+        public function getPaid() {
+            return $this->_paid;
         }
         
     }
