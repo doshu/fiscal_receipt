@@ -254,6 +254,16 @@
             return $paid;
         }
         
+        public function getChange() {
+            $payments = $this->getPayments();
+            $sum = ['change' => 0, 'nochange' => 0];
+            $total = $this->getTotal();
+            foreach($payments as $payment) {
+                $sum[$payment->getHasChange()?'change':'nochange'] += $payment->getPaid();
+            }
+            return $sum['change'] + $sum['nochange'] - min(0, $sum['nochange'] - $total) - $total;
+        }
+        
         public function setCredits($credits) {
             $this->_credits = $credits;
             return $this;
@@ -265,7 +275,7 @@
         
         
         public function jsonSerialize() {
-            return ['total' => $this->getTotal(true), 'paid' => $this->getPaid()] + $this->_jsonSerialize();
+            return ['total' => $this->getTotal(true), 'paid' => $this->getPaid(), 'change' => $this->getChange()] + $this->_jsonSerialize();
         }
         
     }
