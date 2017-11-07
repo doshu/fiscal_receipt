@@ -14,6 +14,8 @@
     
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product);
         
+        public function printReturn(\Inoma\Receipt\Items\ReturnItem $return);
+        
         public function printString(\Inoma\Receipt\Items\StringItem $string);
         
         public function printNumericCode(\Inoma\Receipt\Items\NumericCodeItem $numericCode);

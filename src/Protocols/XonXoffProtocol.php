@@ -61,6 +61,11 @@
             return implode("\n", $cmds);
         }
         
+        
+        public function printReturn(\Inoma\Receipt\Items\ReturnItem $return) {
+            return sprintf('9M"%s"%s*%sH%sR', substr($return->getDescription(), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
+        }
+        
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             return sprintf('"%s"@', substr($string->getValue(), 0, $this->_maxDescLength));
         }
