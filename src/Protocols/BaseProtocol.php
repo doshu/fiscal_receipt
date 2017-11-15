@@ -7,8 +7,11 @@
     abstract class BaseProtocol {
     
         public $debug = false;
+        protected $_logger = null;
     
         public function printReceipt(\Inoma\Receipt\Receipt $receipt) {
+            $this->log('--- start receipt ---');
+            
             $commands = new CommandsCollection();
             
             foreach($receipt->getHeader()->getItems() as $item) {
@@ -44,6 +47,8 @@
                     return false;
                 }
             }
+            
+            $this->log('--- end receipt ---');
             
             $this->afterPrintReceipt($receipt, $commands);
             
@@ -82,6 +87,16 @@
                     break;
                 default:
                     throw new NotImplementedException(get_class($item).' printing not implemented yet');
+            }
+        }
+        
+        public function setLogger($callable) {
+            $this->_logger = $callable;
+        }
+        
+        public function log($message) {
+            if($this->_logger) {
+                $this->_logger($message);
             }
         }
     }

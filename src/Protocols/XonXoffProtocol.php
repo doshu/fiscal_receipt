@@ -180,6 +180,7 @@
         }
         
         public function sendCommand($command) {
+            $this->log($command);
             $fp = fsockopen($this->_printer->getIp(), $this->_printer->getPort(), $errno, $errstr, 10);
 		    if($fp) {
 			    if(fwrite($fp, $command) === false) {
