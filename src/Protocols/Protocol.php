@@ -30,9 +30,11 @@
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client);
         
-        public function sendCommand($command);
-        
         public function cancel();
+        
+        public function dailyFiscalReset();
+        
+        public function sendCommand($command);
     }
 
 ?>

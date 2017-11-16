@@ -166,7 +166,7 @@
                 $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($client->getCode(), 0, $this->_maxDescLength - 14));
             }
             if($client->getCardCode()) {
-                $cmds[] = sprintf('"Tessera N°: %s"@38F', substr($client->getCardCode(), 0, $this->_maxDescLength - 12));
+                $cmds[] = sprintf('"Tessera: %s"@38F', substr($client->getCardCode(), 0, $this->_maxDescLength - 10));
             }
             
             if($client->getCf()) {
@@ -194,6 +194,10 @@
         
         public function cancel() {
             return $this->sendCommand('k');        
+        }
+        
+        public function dailyFiscalReset() {
+            return $this->sendCommand('1F');       
         }
         
         protected function _parsePrice($value) {

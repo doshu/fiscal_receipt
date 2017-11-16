@@ -96,7 +96,8 @@
         
         public function log($message) {
             if($this->_logger) {
-                $this->_logger($message);
+                $logger = $this->_logger;
+                $logger($message);
             }
         }
     }
