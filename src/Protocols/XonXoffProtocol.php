@@ -11,8 +11,6 @@
         protected $_port = null;
         protected $_type = null;
         
-        protected $_printer = null;
-        
         private $_maxDescLength = 22;
         
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection) {
@@ -20,7 +18,7 @@
                 array_unshift($commandsCollection, 'j');
                 array_push($commandsCollection, 'J');
             }
-            if($receipt->getTotal() < 0) {
+            if($receipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
                 array_unshift($commandsCollection, '102M');
             }
         }
@@ -58,7 +56,8 @@
         
         
         public function printReturn(\Inoma\Receipt\Items\ReturnItem $return) {
-            $cmd = $this->_currentReceipt->getTotal() < 0?'"%s"%s*%sH%sR':'9M"%s"%s*%sH%sR';
+            $cmd = $this->_currentReceipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()?
+                '"%s"%s*%sH%sR':'9M"%s"%s*%sH%sR';
             return sprintf($cmd, substr($return->getDescription(), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
         }
         

@@ -9,6 +9,7 @@
         public $debug = false;
         protected $_logger = null;
         protected $_currentReceipt = null;
+        protected $_printer = null;
         
         public function init(\Inoma\Receipt\Printer $printer) {
             if(strtolower($printer->getType()) != 'eth') {

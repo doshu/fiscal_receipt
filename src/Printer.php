@@ -10,6 +10,8 @@
         
         public function getPort();
         
+        public function supportsNegativeTotal();
+        
     }
 
 ?>

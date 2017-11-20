@@ -4,7 +4,7 @@
     
     use Inoma\Receipt\Utility\Uuid;
     
-    class OperatorItem extends Items {
+    class OperatorItem extends Item {
         
         protected $_publicType = 'operator';
         protected $_code = null;
