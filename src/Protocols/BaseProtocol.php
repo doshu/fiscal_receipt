@@ -8,9 +8,20 @@
     
         public $debug = false;
         protected $_logger = null;
+        protected $_currentReceipt = null;
+        
+        public function init(\Inoma\Receipt\Printer $printer) {
+            if(strtolower($printer->getType()) != 'eth') {
+                throw new \NotImplementedException('Only eth protocol support available');
+            }
+            
+            $this->_printer = $printer;
+        }
     
         public function printReceipt(\Inoma\Receipt\Receipt $receipt) {
             $this->log('--- start receipt ---');
+            
+            $this->_currentReceipt = $receipt;
             
             $commands = new CommandsCollection();
             
@@ -44,10 +55,12 @@
             
             foreach($commands->getCommands() as $command) {
                 if(!$this->sendCommand($command)) {
+                    $this->_currentReceipt = $receipt;
                     return false;
                 }
             }
             
+            $this->_currentReceipt = $receipt;
             $this->log('--- end receipt ---');
             
             $this->afterPrintReceipt($receipt, $commands);

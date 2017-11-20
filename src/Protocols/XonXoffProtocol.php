@@ -20,18 +20,13 @@
                 array_unshift($commandsCollection, 'j');
                 array_push($commandsCollection, 'J');
             }
+            if($receipt->getTotal() < 0) {
+                array_unshift($commandsCollection, '102M');
+            }
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection) {
         
-        }
-        
-        public function init(\Inoma\Receipt\Printer $printer) {
-            if(strtolower($printer->getType()) != 'eth') {
-                throw new \NotImplementedException('Only eth protocol support available');
-            }
-            
-            $this->_printer = $printer;
         }
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
@@ -63,7 +58,8 @@
         
         
         public function printReturn(\Inoma\Receipt\Items\ReturnItem $return) {
-            return sprintf('9M"%s"%s*%sH%sR', substr($return->getDescription(), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
+            $cmd = $this->_currentReceipt->getTotal() < 0?'"%s"%s*%sH%sR':'9M"%s"%s*%sH%sR';
+            return sprintf($cmd, substr($return->getDescription(), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
