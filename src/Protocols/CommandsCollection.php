@@ -15,7 +15,7 @@
         
         public function prepend($command) {
             $array = $this->getArrayCopy();
-            array_unshift($array, $value);
+            array_unshift($array, $command);
             $this->exchangeArray($array);
         }
         
