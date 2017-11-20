@@ -19,7 +19,7 @@
                 $commandsCollection->append('J');
             }
             if($receipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
-                $commandsCollection->prepend('120M');
+                $commandsCollection->prepend('102M');
             }
         }
         
@@ -178,7 +178,7 @@
             $this->log($command);
             $fp = fsockopen($this->_printer->getIp(), $this->_printer->getPort(), $errno, $errstr, 10);
 		    if($fp) {
-			    if(fwrite($fp, $command) === false) {
+			    if(fwrite($fp, trime($command)) === false) {
 			        return false;
 			    }
 			    fclose($fp);

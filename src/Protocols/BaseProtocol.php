@@ -56,12 +56,12 @@
             
             foreach($commands->getCommands() as $command) {
                 if(!$this->sendCommand($command)) {
-                    $this->_currentReceipt = $receipt;
+                    $this->_currentReceipt = null;
                     return false;
                 }
             }
             
-            $this->_currentReceipt = $receipt;
+            $this->_currentReceipt = null;
             $this->log('--- end receipt ---');
             
             $this->afterPrintReceipt($receipt, $commands);
