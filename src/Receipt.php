@@ -66,7 +66,7 @@
             return $this->_created;
         }
         
-        public function setOperator(\Inoma\Receipt\Items\OperatoreItem $operator) {
+        public function setOperator(\Inoma\Receipt\Items\OperatorItem $operator) {
             $this->_operator = $operator;
             return $this;
         }
