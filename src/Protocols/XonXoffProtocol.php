@@ -13,17 +13,17 @@
         
         private $_maxDescLength = 22;
         
-        public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection) {
+        public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             if(!$receipt->getIsFiscal()) {
-                array_unshift($commandsCollection, 'j');
-                array_push($commandsCollection, 'J');
+                $commandsCollection->prepend('j');
+                $commandsCollection->append('J');
             }
             if($receipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
-                array_unshift($commandsCollection, '102M');
+                $commandsCollection->prepend('120M');
             }
         }
         
-        public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection) {
+        public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
         
         }
         

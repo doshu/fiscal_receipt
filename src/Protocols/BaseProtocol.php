@@ -69,9 +69,9 @@
             return true;
         }
         
-        abstract public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection);
+        abstract public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection);
         
-        abstract public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \ArrayAccess $commandsCollection);
+        abstract public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection);
         
         public function printItem(\Inoma\Receipt\Items\Item $item) {
             switch(get_class($item)) {
