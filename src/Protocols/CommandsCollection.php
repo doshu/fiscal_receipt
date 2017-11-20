@@ -9,7 +9,7 @@
         }
         
         public function setCommands(array $commands) {
-            
+            $commands = array_filter($commands);
             $this->exchangeArray($commands);
         }   
         
