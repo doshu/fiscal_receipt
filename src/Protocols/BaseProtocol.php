@@ -33,10 +33,6 @@
                 $commands[] = $this->printItem($item);
             }
             
-            foreach($receipt->getPayments() as $payment) {
-                $commands[] = $this->printPaymentMethod($payment);
-            }
-            
             if($receipt->getOperator()) {
                 $commands[] = $this->printOperator($receipt->getOperator());
             }
@@ -46,6 +42,10 @@
             
             foreach($receipt->getFooter()->getItems() as $item) {
                 $commands[] = $this->printItem($item);
+            }
+            
+            foreach($receipt->getPayments() as $payment) {
+                $commands[] = $this->printPaymentMethod($payment);
             }
             
             $this->beforePrintReceipt($receipt, $commands);
