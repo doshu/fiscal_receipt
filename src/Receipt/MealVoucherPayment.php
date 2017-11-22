@@ -5,7 +5,7 @@
     class MealVoucherPayment extends PaymentMethod {
     
         protected $_code = 'meal_voucher';
-        protected $_hasChange = true;
+        protected $_hasChange = false;
         
     }
 
