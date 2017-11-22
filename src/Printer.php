@@ -12,6 +12,8 @@
         
         public function supportsNegativeTotal();
         
+        public function supportsNoChangePayment();
+        
     }
 
 ?>

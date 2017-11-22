@@ -100,8 +100,8 @@
         }
         
         public function getFinalPrice($applyModifier = true) {
+            $this->setFinalPrice($this->getPrice() * $this->getQty());
             if($applyModifier) {
-                $this->setFinalPrice($this->getPrice() * $this->getQty());
                 foreach($this->getDiscounts() as $discount) {
                     $discount->apply($this);
                 }
@@ -118,7 +118,7 @@
         }
         
         public function jsonSerialize() {
-            return ['finalPrice' => $this->getFinalPrice(true)] + $this->_jsonSerialize();
+            return ['finalPrice' => $this->getFinalPrice()] + $this->_jsonSerialize();
         }
     }
 

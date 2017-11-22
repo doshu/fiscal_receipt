@@ -29,6 +29,7 @@
             foreach($receipt->getHeader()->getItems() as $item) {
                 $commands[] = $this->printItem($item);
             }
+            
             foreach($receipt->getBody()->getItems() as $item) {
                 $commands[] = $this->printItem($item);
             }
@@ -36,6 +37,7 @@
             if($receipt->getOperator()) {
                 $commands[] = $this->printOperator($receipt->getOperator());
             }
+            
             if($receipt->getClient()) {
                 $commands[] = $this->printClient($receipt->getClient());
             }

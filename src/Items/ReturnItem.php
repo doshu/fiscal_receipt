@@ -63,13 +63,13 @@
         }
         
         
-        public function getFinalPrice($applyModifier = true) {
+        public function getFinalPrice($applyModifier = false) {
             $this->setFinalPrice($this->getPrice() * $this->getQty());
             return $this->_finalPrice;
         }
         
         public function jsonSerialize() {
-            return ['finalPrice' => $this->getFinalPrice(true)] + $this->_jsonSerialize();
+            return ['finalPrice' => $this->getFinalPrice()] + $this->_jsonSerialize();
         }
         
     }
