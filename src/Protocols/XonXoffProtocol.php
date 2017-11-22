@@ -29,7 +29,7 @@
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
             $cmds = [];
-            $cmds[] = sprintf('"%s"%s*%sH%sR', substr($product->getDescription(), 0, $this->_maxDescLength), $product->getQty(), $product->getPrice(), 1);
+            $cmds[] = sprintf('"%s"%s*%sH%sR', substr($product->getDescription(), 0, $this->_maxDescLength), $product->getQty(), $this->_parsePrice($product->getPrice()), 1);
             foreach($product->getDiscounts() as $discount) {
                 switch($discount->getCode()) {
                     case 'byPercentage':
