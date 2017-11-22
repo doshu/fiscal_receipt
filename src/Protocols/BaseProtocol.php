@@ -26,6 +26,13 @@
             
             $commands = new CommandsCollection();
             
+            if(!$this->_printer->supportsNoChangePayment()) {
+                $noChangeAddition = round($receipt->getTotal() - $receipt->getPaid() - $receipt->getChange(), 2);
+                if($noChangeAddition > 0) {
+                    $receipt->addIncrease(new \Inoma\Receipt\Receipt\IncreaseByValue($noChangeAddition, "Varie"));
+                }
+            }
+            
             foreach($receipt->getHeader()->getItems() as $item) {
                 $commands[] = $this->printItem($item);
             }
