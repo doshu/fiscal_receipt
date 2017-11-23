@@ -30,6 +30,10 @@
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client);
         
+        public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount);
+        
+        public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase);
+        
         public function cancel();
         
         public function dailyFiscalReset();

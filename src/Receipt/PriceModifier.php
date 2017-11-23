@@ -17,6 +17,10 @@
             $this->setDescription($description);
         }
         
+        public function getCode() {
+            return $this->_code;
+        }
+        
         public function setValue($value) {
             $this->_value = $value;
             return $this;

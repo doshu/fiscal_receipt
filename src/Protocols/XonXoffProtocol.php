@@ -174,6 +174,24 @@
             return implode("\n", $cmds);
         }
         
+        public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
+            if($discount->getCode() == 'byPercentage') {
+                return sprintf('"%s"@%s*2M', $discount->getDescription(), $discount->getValue());
+            }
+            elseif($discount->getCode() == 'byValue') {
+                return sprintf('"%s"@%sH4M', $discount->getDescription(), $discount->getValue());
+            }
+        }
+        
+        public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
+            if($increase->getCode() == 'byPercentage') {
+                return sprintf('"%s"@%s*6M', $increase->getDescription(), $increase->getValue());
+            }
+            elseif($increase->getCode() == 'byValue') {
+                return sprintf('"%s"@%sH8M', $increase->getDescription(), $increase->getValue());
+            }
+        }
+        
         public function sendCommand($command) {
             $this->log($command);
             $fp = fsockopen($this->_printer->getIp(), $this->_printer->getPort(), $errno, $errstr, 10);

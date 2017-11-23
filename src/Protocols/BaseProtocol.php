@@ -53,6 +53,14 @@
                 $commands[] = $this->printItem($item);
             }
             
+            foreach($receipt->getDiscounts() as $discount) {
+                $commands[] = $this->printReceiptDiscount($discount);
+            }
+            
+            foreach($receipt->getIncreases() as $increase) {
+                $commands[] = $this->printReceiptIncrease($increase);
+            }
+            
             foreach($receipt->getPayments() as $payment) {
                 $commands[] = $this->printPaymentMethod($payment);
             }
