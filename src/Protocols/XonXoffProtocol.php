@@ -36,7 +36,7 @@
                         $cmds[] = sprintf('%d*1M', $discount->getValue());
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf('%sH3M', $discount->getValue());
+                        $cmds[] = sprintf('%sH3M', $this->_parsePrice($discount->getValue()));
                         break;
                 }
             }
@@ -46,7 +46,7 @@
                         $cmds[] = sprintf('%d*5M', $increase->getValue());
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf('%sH7M', $increase->getValue());
+                        $cmds[] = sprintf('%sH7M', $this->_parsePrice($increase->getValue()));
                         break;
                 }
             }
@@ -176,19 +176,19 @@
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             if($discount->getCode() == 'byPercentage') {
-                return sprintf('"%s"@%s*2M', $discount->getDescription(), $discount->getValue());
+                return sprintf('"%s"%s*2M', $discount->getDescription(), $discount->getValue());
             }
             elseif($discount->getCode() == 'byValue') {
-                return sprintf('"%s"@%sH4M', $discount->getDescription(), $discount->getValue());
+                return sprintf('"%s"%sH4M', $discount->getDescription(), $this->_parsePrice($discount->getValue()));
             }
         }
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
             if($increase->getCode() == 'byPercentage') {
-                return sprintf('"%s"@%s*6M', $increase->getDescription(), $increase->getValue());
+                return sprintf('"%s"%s*6M', $increase->getDescription(), $increase->getValue());
             }
             elseif($increase->getCode() == 'byValue') {
-                return sprintf('"%s"@%sH8M', $increase->getDescription(), $increase->getValue());
+                return sprintf('"%s"%sH8M', $increase->getDescription(), $this->_parsePrice($increase->getValue()));
             }
         }
         
