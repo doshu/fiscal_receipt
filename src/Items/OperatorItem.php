@@ -16,20 +16,42 @@
             $this->setLabel($label);
         } 
         
+        /**
+         * imposta il codice operatore
+         *
+         * @param string $code
+         * @return $this
+         */
         public function setCode($code) {
             $this->_code = $code;
             return $this;
         }
         
+        /**
+         * ritorna il codice operatore
+         *
+         * @return tring
+         */
         public function getCode() {
             return $this->_code;
         }
         
+        /**
+         * imposta il nominativo dell'operatore
+         *
+         * @param string $label
+         * @return $this
+         */
         public function setLabel($label) {
             $this->_label = $label;
             return $this;
         }
         
+        /**
+         * ritorna il nominativo dell'operatore
+         *
+         * @return string
+         */
         public function getLabel() {
             return $this->_label;
         }
