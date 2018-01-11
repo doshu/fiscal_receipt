@@ -8,7 +8,7 @@
      * stampa di un codice numerico
      *
      */
-    class NumericCodeItem {
+    class NumericCodeItem extends Item {
         
         protected $_publicType = 'numeric_code';
         protected $_value = null;
