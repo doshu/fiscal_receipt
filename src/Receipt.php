@@ -265,6 +265,34 @@
         }
         
         /**
+         * rimuove tutti i prodotti da uno scontrino
+         *
+         * @param string $uuid
+         * @return $this
+         */
+        public function clearProducts() {
+            $products = $this->getProducts();
+            foreach($products as $product) {
+                $this->_body->deleteItem($product->getUuid());
+            }
+            return $this;
+        }
+        
+        /**
+         * rimuove tutti i prodotti da uno scontrino
+         *
+         * @param string $uuid
+         * @return $this
+         */
+        public function clearReturns() {
+            $returns = $this->getReturns();
+            foreach($returns as $return) {
+                $this->_body->deleteItem($return->getUuid());
+            }
+            return $this;
+        }
+        
+        /**
          * ritorna un determinato prodotto o reso dello scontrino
          *
          * @param string $uuid
