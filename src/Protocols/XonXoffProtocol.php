@@ -62,7 +62,7 @@
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
-            return sprintf('"%s"@', substr($string->getValue(), 0, $this->_maxDescLength));
+            return sprintf('"%s"@', $string->getValue());
         }
         
         public function printNumericCode(\Inoma\Receipt\Items\NumericCodeItem $numericCode) {
