@@ -13,6 +13,10 @@
         
         private $_maxDescLength = 22;
         
+        private $_charOverride = [
+            '€' => "\x7f"  
+        ];
+        
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             if(!$receipt->getIsFiscal()) {
                 $commandsCollection->prepend('j');
@@ -62,7 +66,10 @@
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
-            return sprintf('"%s"@', $string->getValue());
+            return sprintf(
+                '"%s"@', 
+                str_replace(array_keys($this->_charOverride), array_values($this->_charOverride), $string->getValue())
+            );
         }
         
         public function printNumericCode(\Inoma\Receipt\Items\NumericCodeItem $numericCode) {
