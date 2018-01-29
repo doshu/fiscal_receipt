@@ -172,7 +172,7 @@
             }
             
             if($client->getCf()) {
-                $cmds[] = sprintf('"%s"@39F', $client->getCf());
+                $cmds[] = sprintf('"%s"@39F', strtoupper($client->getCf()));
             }
             if($client->getVat()) {
                 $cmds[] = sprintf('"%s"@39F', $client->getVat());
