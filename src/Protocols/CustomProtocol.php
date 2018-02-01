@@ -24,6 +24,10 @@
                 $commandsCollection->prepend('400110000000000');
                 $commandsCollection->append('4004');
             }
+            else {
+                $commandsCollection->append('3011');
+                $commandsCollection->append('3013');
+            }
             if($receipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
                 $commandsCollection->prepend('102M');
             }
