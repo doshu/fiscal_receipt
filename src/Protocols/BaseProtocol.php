@@ -13,7 +13,7 @@
         
         public function init(\Inoma\Receipt\Printer $printer) {
             if(strtolower($printer->getType()) != 'eth') {
-                throw new \NotImplementedException('Only eth protocol support available');
+                throw new NotImplementedException('Only eth protocol support available');
             }
             
             $this->_printer = $printer;

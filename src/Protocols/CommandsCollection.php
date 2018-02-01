@@ -13,9 +13,19 @@
             $this->exchangeArray($commands);
         }   
         
+        public function append($command) {
+            $commands = explode("\n", $command);
+            foreach($commands as $_c) {
+                parent::append($_c);
+            }
+        }
+        
         public function prepend($command) {
             $array = $this->getArrayCopy();
-            array_unshift($array, $command);
+            $commands = explode("\n", $command);
+            foreach($commands as $_c) {
+                array_unshift($array, $command);
+            }
             $this->exchangeArray($array);
         }
         
