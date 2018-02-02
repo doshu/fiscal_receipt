@@ -8,7 +8,7 @@
             
         public static function build($protocol) {
             $protocolClass = $protocol.'Protocol';
-            return new $protocolClass();
+            return new Protocols\$protocolClass();
         }
         
     }
