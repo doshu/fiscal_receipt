@@ -7,8 +7,8 @@
     class ProtocolFactory {
             
         public static function build($protocol) {
-            $protocolClass = "Protocols\\".$protocol.'Protocol';
-            return new $protocolClass();
+            $protocolClass = "\\Inoma\\Receipt\\Protocols\\".$protocol.'Protocol';
+            return new Protocols\CustomProtocol();
         }
         
     }
