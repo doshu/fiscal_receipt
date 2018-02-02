@@ -1,6 +1,6 @@
 <?php
 
-    namespace Inoma\Receipt\Protocols\Exception;
+    namespace Inoma\Receipt\Protocols\Exceptions;
   
     class InvalidValueException extends \Exception {
     

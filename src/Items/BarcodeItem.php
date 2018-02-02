@@ -4,7 +4,7 @@
     
     use Inoma\Receipt\Utility\Uuid;
     
-    class BarcodeItem extends Items {
+    class BarcodeItem extends Item {
         
         protected $_publicType = 'barcode';
         protected $_code = null;

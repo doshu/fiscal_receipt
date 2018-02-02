@@ -34,35 +34,35 @@
             }
             
             foreach($receipt->getHeader()->getItems() as $item) {
-                $commands[] = $this->printItem($item);
+                $commands->append($this->printItem($item));
             }
             
             foreach($receipt->getBody()->getItems() as $item) {
-                $commands[] = $this->printItem($item);
+                $commands->append($this->printItem($item));
             }
             
             if($receipt->getOperator()) {
-                $commands[] = $this->printOperator($receipt->getOperator());
+                $commands->append($this->printOperator($receipt->getOperator()));
             }
             
             if($receipt->getClient()) {
-                $commands[] = $this->printClient($receipt->getClient());
+                $commands->append($this->printClient($receipt->getClient()));
             }
             
             foreach($receipt->getFooter()->getItems() as $item) {
-                $commands[] = $this->printItem($item);
+                $commands->append($this->printItem($item));
             }
             
             foreach($receipt->getDiscounts() as $discount) {
-                $commands[] = $this->printReceiptDiscount($discount);
+                $commands->append($this->printReceiptDiscount($discount));
             }
             
             foreach($receipt->getIncreases() as $increase) {
-                $commands[] = $this->printReceiptIncrease($increase);
+                $commands->append($this->printReceiptIncrease($increase));
             }
             
             foreach($receipt->getPayments() as $payment) {
-                $commands[] = $this->printPaymentMethod($payment);
+                $commands->append($this->printPaymentMethod($payment));
             }
             
             $this->beforePrintReceipt($receipt, $commands);

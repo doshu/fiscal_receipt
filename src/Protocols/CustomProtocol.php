@@ -13,24 +13,28 @@
         
         private $_maxDescLength = 22;
         
-        private $_charOverride = [
-            '€' => "\x7f"  
-        ];
+        private $_counter = 0;
         
         protected $_connection = null;
         
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
+            
             if(!$receipt->getIsFiscal()) {
                 $commandsCollection->prepend('400110000000000');
                 $commandsCollection->append('4004');
             }
             else {
-                $commandsCollection->append('3011');
-                $commandsCollection->append('3013');
+                if($receipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
+                    $commandsCollection->prepend('7102600000');
+                    $commandsCollection->append('3011');
+                    $commandsCollection->append('3013');
+                }
+                else {
+                    $commandsCollection->append('3011');
+                    $commandsCollection->append('3013');
+                }
             }
-            if($receipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
-                $commandsCollection->prepend('102M');
-            }
+            
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
@@ -40,27 +44,27 @@
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
             $cmds = [];
             $desc = substr(sprintf("%sX %s", $product->getQty(), $product->getDescription()), 0, $this->_maxDescLength);
-            $cmds[] = sprintf("30011%02d%09d", $desc, strlen($desc), $this->_parsePrice($product->getPrice()));
+            $cmds[] = sprintf("30011%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($product->getPrice() * $product->getQty()));
             
             foreach($product->getDiscounts() as $discount) {
+                $desc = substr($discount->getDescription(), 0, $this->_maxDescLength);
                 switch($discount->getCode()) {
                     case 'byPercentage':
-                        $desc = sub_str($discount->getDescription(), 0, $this->_maxDescLength);
-                        $cmds[] = sprintf("30013%02d%09d", $desc, strlen($desc), $this->_parsePrice($product->getPrice() / 100 *$discount->getValue()));
+                        $cmds[] = sprintf("30013%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $discount->getValue()));
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf("30013%02d%09d", $desc, strlen($desc), $this->_parsePrice($discount->getValue()));
+                        $cmds[] = sprintf("30013%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($discount->getValue()));
                         break;
                 }
             }
             foreach($product->getIncreases() as $increase) {
+                $desc = substr($discount->getDescription(), 0, $this->_maxDescLength);
                 switch($increase->getCode()) {
                     case 'byPercentage':
-                        $desc = sub_str($discount->getDescription(), 0, $this->_maxDescLength);
-                        $cmds[] = sprintf("30012%02d%09d", $desc, strlen($desc), $this->_parsePrice($product->getPrice() / 100 *$discount->getValue()));
+                        $cmds[] = sprintf("30012%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $discount->getValue()));
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf("30012%02d%09d", $desc, strlen($desc), $this->_parsePrice($discount->getValue()));
+                        $cmds[] = sprintf("30012%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($discount->getValue()));
                         break;
                 }
             }
@@ -70,147 +74,153 @@
         
         
         public function printReturn(\Inoma\Receipt\Items\ReturnItem $return) {
+            /*
             $cmd = $this->_currentReceipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()?
                 '"%s"%s*%sH%sR':'9M"%s"%s*%sH%sR';
-            return sprintf($cmd, substr($return->getDescription(), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
+            */
+            $desc = substr(sprintf("%sX %s", $return->getQty(), $return->getDescription()), 0, $this->_maxDescLength);
+            if($this->_currentReceipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()) {
+                return sprintf("30011%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($return->getPrice() * $return->getQty()));
+            }
+            return sprintf("30019%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($return->getPrice() * $return->getQty()));
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
-            return sprintf(
-                '"%s"@', 
-                str_replace(array_keys($this->_charOverride), array_values($this->_charOverride), $string->getValue())
-            );
+            if($this->_currentReceipt->getIsFiscal()) {
+                $string = substr($string->getValue(), 0, 42);
+                return sprintf("40031%02d%s000000000", strlen($string), $string);
+            }
+            
+            $string = substr($string->getValue(), 0, 32);
+            return sprintf("30021%02d%s", strlen($string), $string);
         }
         
         public function printNumericCode(\Inoma\Receipt\Items\NumericCodeItem $numericCode) {
             if(!ctype_digit($numericCode->getValue())) {
                 throw new InvalidValueException('Numeric code '.$numericCode->getValue().' is not valid');
             }
-            return sprintf('%s#', $numericCode->getValue());
+            return $this->printString(new \Inoma\Receipt\Items\StringItem($numericCode->getValue()));
         }
         
         public function printSubtotal(\Inoma\Receipt\Items\SubtotalItem $subtotal) {
-            return "=";
+            return "3003";
         }
         
         public function printBarcode(\Inoma\Receipt\Items\BarcodeItem $barcode) {
             switch(strtolower($barcode->getType())) {
                 case 'ean13':
-                    if(strlen($barcode->getCode()) < 12  || strlen($barcode->getCode()) > 13) {
-                        throw new InvalidValueException('Ean13 barcode '.$barcode->getCode().' is not valid');
-                    }
-                    return sprintf('"%s"1Z', $barcode->getCode());
+                    $type = "1";
                     break;
                 case 'ean8':
                     if(strlen($barcode->getCode()) < 7 || strlen($barcode->getCode()) > 8) {
                         throw new InvalidValueException('Ean8 barcode '.$barcode->getCode().' is not valid');
                     }
-                    return sprintf('"%s"2Z', $barcode->getCode());
+                    $type = "2";
                     break;
                 case 'code39':
-                    return sprintf('"%s"3Z', strtoupper($barcode->getCode()));
+                    $type = "3";
                     break;
                 case 'code128':
-                    return sprintf('"%s"4Z', $barcode->getCode());
+                    $type = "4";
                     break;
                 case 'interleaved2of5':
-                    return sprintf('"%s"5Z', strtoupper($barcode->getCode()));
+                    $type = "5";
                     break;
-                case 'barcode':
-                    return sprintf('"%s"6Z', strtoupper($barcode->getCode()));
+                case 'qrcode':
+                    $type = "6";
+                    break;
+                case 'databar':
+                    $type = "7";   
                     break;
                 default:
                     throw new InvalidValueException($barcode->getType().' barcode type is not valid');
             }
+            
+            return sprintf("3021%s250%02d%s", $type, strlen($barcode->getCode()), $barcode->getCode());
         }
         
         public function printPaymentMethod(\Inoma\Receipt\Receipt\PaymentMethod $payment) {
-            $value = !$payment->getValue()?$this->_currentReceipt->getTotal():$payment->getValue();
+            $value = !$payment->getValue()?abs($this->_currentReceipt->getTotal()):$payment->getValue();
             switch(get_class($payment)) {
                 case \Inoma\Receipt\Receipt\CashPayment::class:
-                    return sprintf("3004%02d%09d", strlen("CONTANTI"), "CONTANTI", $this->_parsePrice($value));
+                    return sprintf("3004%02d%s%09d", strlen("CONTANTI"), "CONTANTI", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\CheckPayment::class:
-                    if($payment->getValue()) {
-                        return sprintf('%sH2T', $this->_parsePrice($payment->getValue()));
-                    }
-                    return "2T";
+                    return sprintf("3004%02d%s%09d", strlen("ASSEGNO"), "ASSEGNO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\CardPayment::class:
-                    if($payment->getValue()) {
-                        return sprintf('%sH3T', $this->_parsePrice($payment->getValue()));
-                    }
-                    return "3T";
+                    return sprintf("3004%02d%s%09d", strlen("CARTA"), "CARTA", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\MealVoucherPayment::class:
-                    if($payment->getValue()) {
-                        return sprintf('%sH5T', $this->_parsePrice($payment->getValue()));
-                    }
-                    return "5T";
+                    return sprintf("3004%02d%s%09d", strlen("BUONO PASTO"), "BUONO PASTO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\CreditPayment::class:
-                    if($payment->getValue()) {
-                        return sprintf('%sH7T', $this->_parsePrice($payment->getValue()));
-                    }
-                    return "7T";
+                    return sprintf("3005%02d%s%09d", strlen("CREDITO"), "CREDITO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\GenericPayment::class:
-                    if($payment->getValue()) {
-                        return sprintf('%sH4T', $this->_parsePrice($payment->getValue()));
-                    }
-                    return "4T";
+                    return sprintf("3004%02d%s%09d", strlen("GENERICO"), "GENERICO", $this->_parsePrice($value));
                     break;
             }
         }
         
         public function printOperator(\Inoma\Receipt\Items\OperatorItem $operator) {
-            return sprintf('"%s%s"@', 'Operatore:', substr($operator->getLabel(), 0, $this->_maxDescLength - 10));
+            $string = substr('Operatore: '.$operator->getLabel(), 0, 32);
+            return sprintf("30101%02d%s", strlen($string), $string);
         }
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client) {
             $cmds = [];
             if($client->getLabel()) {
-                $cmds[] = sprintf('"%s"@38F', substr($client->getLabel(), 0, $this->_maxDescLength));
+                $label = substr($client->getLabel(), 0, 32);
+                $cmds[] = sprintf("3010C%02d%s", strlen($label), $label);
             }
             if($client->getCode()) {
-                $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($client->getCode(), 0, $this->_maxDescLength - 14));
+                $code = substr("Codice Cliente: ".$client->getCode(), 0, 32);
+                $cmds[] = sprintf("3010C%02d%s", strlen($code), $code);
             }
             if($client->getCardCode()) {
-                $cmds[] = sprintf('"Tessera: %s"@38F', substr($client->getCardCode(), 0, $this->_maxDescLength - 10));
+                $cardCode = substr("Tessera: ".$client->getCardCode(), 0, 32);
+                $cmds[] = sprintf("3010C%02d%s", strlen($cardCode), $cardCode);
             }
             
             if($client->getCf()) {
-                $cmds[] = sprintf('"%s"@39F', strtoupper($client->getCf()));
+                $cf = substr("CF: ".$client->getCf(), 0, 32);
+                $cmds[] = sprintf("3010C%02d%s", strlen($cf), $cf);
             }
             if($client->getVat()) {
-                $cmds[] = sprintf('"%s"@39F', $client->getVat());
+                $vat = substr("P.IVA: ".$client->getVat(), 0, 32);
+                $cmds[] = sprintf("3010C%02d%s", strlen($vat), $vat);
             }
             
             return implode("\n", $cmds);
         }
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
+            $desc = substr($discount->getDescription(), 0, $this->_maxDescLength);
             if($discount->getCode() == 'byPercentage') {
-                return sprintf('"%s"%s*2M', $discount->getDescription(), $discount->getValue());
+                return sprintf("30013%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $discount->getValue()));
             }
             elseif($discount->getCode() == 'byValue') {
-                return sprintf('"%s"%sH4M', $discount->getDescription(), $this->_parsePrice($discount->getValue()));
+                return sprintf("30013%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($discount->getValue()));
             }
         }
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
+            $desc = substr($increase->getDescription(), 0, $this->_maxDescLength);
             if($increase->getCode() == 'byPercentage') {
-                return sprintf('"%s"%s*6M', $increase->getDescription(), $increase->getValue());
+                return sprintf("30012%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $increase->getValue()));
             }
             elseif($increase->getCode() == 'byValue') {
-                return sprintf('"%s"%sH8M', $increase->getDescription(), $this->_parsePrice($increase->getValue()));
+                return sprintf("30012%02d%s%09d", strlen($desc), $desc, $this->_parsePrice($increase->getValue()));
             }
         }
         
         public function sendCommand($command) {
             $this->log($command);
             
+            echo $command."\n";
             $frame = $this->_createFrame($command);
+            //var_dump($frame);
             
             $connection =  $this->_getConnection();
             
@@ -219,10 +229,23 @@
 			        return false;
 			    }
 			    $res = fread($connection, 1);
+			    var_dump($res);
 			    fwrite($connection, "\x06");
+			    $response = $this->_readFrame();
+			    var_dump($response);
 			    return true;
 		    }
 		    return false;
+        }
+        
+        protected function _readFrame() {
+            $connection =  $this->_getConnection();
+            $frame = "";
+            do {
+                $char = fread($connection, 1);
+                $frame .= $char;
+            } while($char != "\x03");
+            return $frame;
         }
         
         protected function _getConnection() {
@@ -233,11 +256,14 @@
         }
         
         public function cancel() {
-            return $this->sendCommand('k');        
+            $desc = "ANNULLAMENTO";
+            $this->sendCommand(sprintf('30018%02d%s000000000', strlen($desc), $desc));  
+            $this->sendCommand('3011');    
+            $this->sendCommand('3013');          
         }
         
         public function dailyFiscalReset() {
-            return $this->sendCommand('1F');       
+            return $this->sendCommand("2002");       
         }
         
         protected function _parsePrice($value) {
@@ -246,11 +272,12 @@
         
         protected function _createFrame($command) {
             $stx = "\x02";
-            $cnt = "\x00\x00";
+            $counter = $this->_counter % 100;
+            $cnt = (string)sprintf("%02d", $counter);
             $ident = "\x30";
             $cks = $this->_checksum($cnt, $command);
             $etx = "\x03";
-            $frame = $stx.$cnt.$ident.$m.$cks.$etx;
+            $frame = $stx.$cnt.$ident.$command.$cks.$etx;
             
             return $frame;
         }
@@ -271,6 +298,74 @@
             
             $cks = ($cntSum + $identSum + $mSum) % 100;
             return str_pad((string)$cks, 2, '0', STR_PAD_LEFT);
+        }
+        
+        
+        public function printReceipt(\Inoma\Receipt\Receipt $receipt) {
+            $this->log('--- start receipt ---');
+            
+            $this->_currentReceipt = $receipt;
+            
+            $commands = new CommandsCollection();
+            
+            if(!$this->_printer->supportsNoChangePayment()) {
+                $noChangeAddition = round($receipt->getPaid() - $receipt->getTotal() - $receipt->getChange(), 2);
+                if($noChangeAddition > 0) {
+                    $receipt->addIncrease(new \Inoma\Receipt\Receipt\IncreaseByValue($noChangeAddition, "Varie"));
+                }
+            }
+            
+            foreach($receipt->getHeader()->getItems() as $item) {
+                $commands->append($this->printItem($item));
+            }
+            
+            foreach($receipt->getBody()->getItems() as $item) {
+                $commands->append($this->printItem($item));
+            }
+            
+            foreach($receipt->getFooter()->getItems() as $item) {
+                $commands->append($this->printItem($item));
+            }
+            
+            foreach($receipt->getDiscounts() as $discount) {
+                $commands->append($this->printReceiptDiscount($discount));
+            }
+            
+            foreach($receipt->getIncreases() as $increase) {
+                $commands->append($this->printReceiptIncrease($increase));
+            }
+            
+            foreach($receipt->getPayments() as $payment) {
+                $commands->append($this->printPaymentMethod($payment));
+            }
+            
+            if($receipt->getOperator()) {
+                $commands->append($this->printOperator($receipt->getOperator()));
+            }
+            
+            if($receipt->getClient()) {
+                $commands->append($this->printClient($receipt->getClient()));
+            }
+            
+            $this->beforePrintReceipt($receipt, $commands);
+            
+            if($this->debug) {
+                return $commands->getCommands();
+            }
+            
+            foreach($commands->getCommands() as $command) {
+                if(!$this->sendCommand($command)) {
+                    $this->_currentReceipt = null;
+                    return false;
+                }
+            }
+            
+            $this->_currentReceipt = null;
+            $this->log('--- end receipt ---');
+            
+            $this->afterPrintReceipt($receipt, $commands);
+            
+            return true;
         }
         
     }
