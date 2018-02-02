@@ -8,7 +8,7 @@
             
         public static function build($protocol) {
             $protocolClass = "\\Inoma\\Receipt\\Protocols\\".$protocol.'Protocol';
-            return new Protocols\CustomProtocol();
+            return new $protocolClass();
         }
         
     }
