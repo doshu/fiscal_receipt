@@ -220,8 +220,6 @@
             
             echo $command."\n";
             $frame = $this->_createFrame($command);
-            //var_dump($frame);
-            
             $connection =  $this->_getConnection();
             
 		    if($connection) {
@@ -229,10 +227,8 @@
 			        return false;
 			    }
 			    $res = fread($connection, 1);
-			    var_dump($res);
 			    fwrite($connection, "\x06");
 			    $response = $this->_readFrame();
-			    var_dump($response);
 			    return true;
 		    }
 		    return false;
