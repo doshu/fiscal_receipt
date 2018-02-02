@@ -217,8 +217,6 @@
         
         public function sendCommand($command) {
             $this->log($command);
-            
-            echo $command."\n";
             $frame = $this->_createFrame($command);
             $connection =  $this->_getConnection();
             
