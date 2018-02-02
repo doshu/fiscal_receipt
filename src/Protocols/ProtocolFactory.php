@@ -6,7 +6,7 @@
     
     class ProtocolFactory {
             
-        public static build($protocol) {
+        public static function build($protocol) {
             $protocolClass = $protocol.'Protocol';
             return new $protocolClass();
         }
