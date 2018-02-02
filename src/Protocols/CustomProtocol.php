@@ -86,11 +86,10 @@
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
-            if($this->_currentReceipt->getIsFiscal()) {
+            if(!$this->_currentReceipt->getIsFiscal()) {
                 $string = substr($string->getValue(), 0, 42);
                 return sprintf("40031%02d%s000000000", strlen($string), $string);
             }
-            
             $string = substr($string->getValue(), 0, 32);
             return sprintf("30021%02d%s", strlen($string), $string);
         }
