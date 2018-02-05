@@ -257,7 +257,7 @@
 			    $res = fread($connection, 1);
 			    fwrite($connection, "\x06");
 			    $response = $this->_readFrame();
-			    return true;
+			    return $res == "\x06";
 		    }
 		    return false;
         }
@@ -400,13 +400,14 @@
             $receipt->setIsFiscal(false);
             $this->_currentReceipt = $receipt;
             
+            $commands = new CommandsCollection();
+            
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("FATTURA ".$invoiceNumber, ['style' => 'double']));
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(date('d/m/Y')));
             
             foreach($receipt->getHeader()->getItems() as $item) {
                 $commands->append($this->printItem($item));
             }
-            
             
             foreach($receipt->getFooter()->getItems() as $item) {
                 $commands->append($this->printItem($item));
