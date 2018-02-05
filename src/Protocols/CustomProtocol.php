@@ -39,8 +39,8 @@
         
         public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             
-            $commandsCollection->prepend(sprintf('400121%09d', $this->_parsePrice($receipt->getTotal())));
             $commandsCollection->prepend('4002');
+            $commandsCollection->prepend(sprintf('400121%09d', $this->_parsePrice($receipt->getTotal())));
             $commandsCollection->append('4006');
         }
         
