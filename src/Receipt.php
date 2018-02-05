@@ -50,6 +50,11 @@
         protected $_client = null;
         
         /**
+         * @var \Inoma\Receipt\Items\InvoiceRecipientItem cliente destinatario della fattura
+         */
+        protected $_invoiceRecipient = null;
+        
+        /**
          * @var boolean indica se lo scontrino è fiscale o no
          * 
          */
@@ -177,6 +182,27 @@
         }
         
         /**
+         * ritorna il cliente destinatario della fattura
+         *
+         * @return \Inoma\Receipt\Items\InvoiceRecipientItem
+         */
+        public function getInvoiceRecipient() {
+            return $this->_invoiceRecipient;
+        }
+        
+        
+        /**
+         * imposta il cliente destinatario della fattura
+         *
+         * @param \Inoma\Receipt\Items\InvoiceRecipientItem $recipient
+         * @return $this
+         */
+        public function setInvoiceRecipient(\Inoma\Receipt\Items\InvoiceRecipientItem $recipient) {
+            $this->_invoiceRecipient = $recipient;
+            return $this;
+        }
+        
+        /**
          * ritorna il cliente a cui è stato emesso lo scontrino
          *
          * @return \Inoma\Receipt\Items\ClientItem
@@ -184,6 +210,7 @@
         public function getClient() {
             return $this->_client;
         }
+        
         
         /**
          * rimuove il cliente impostato per lo scontrino
