@@ -223,6 +223,16 @@
         }
         
         /**
+         * rimuove il cliente destinatario della fattura
+         *
+         * @return $this
+         */
+        public function deleteInvoiceRecipient() {
+            $this->_invoiceRecipient = null;
+            return $this;
+        }
+        
+        /**
          * imposta se lo scontrino è fiscale o no
          *
          * @param boolean $isFiscal
