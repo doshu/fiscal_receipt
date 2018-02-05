@@ -121,6 +121,11 @@
             }
         }
         
+        
+        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $invoiceNumber) {
+            throw new NotImplementedException('Invoice printing not implemented yet');
+        }
+        
         public function setLogger($callable) {
             $this->_logger = $callable;
         }

@@ -10,6 +10,8 @@
         
         public function printReceipt(\Inoma\Receipt\Receipt $receipt);
         
+        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $invoiceNumber);
+        
         public function printItem(\Inoma\Receipt\Items\Item $item);
     
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product);

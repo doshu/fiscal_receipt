@@ -26,6 +26,7 @@
         public function getValue() {
             return $this->_value;
         }
+        
     }
 
 ?>

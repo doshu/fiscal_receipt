@@ -37,7 +37,18 @@
             
         }
         
+        public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
+            
+            $commandsCollection->prepend(sprintf('400121%09d', $this->_parsePrice($receipt->getTotal())));
+            $commandsCollection->prepend('4002');
+            $commandsCollection->append('4006');
+        }
+        
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
+        
+        }
+        
+        public function afterPrintInvocie(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
         
         }
         
@@ -88,7 +99,27 @@
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             if(!$this->_currentReceipt->getIsFiscal()) {
                 $string = substr($string->getValue(), 0, 42);
-                return sprintf("40031%02d%s000000000", strlen($string), $string);
+                $options = $string->getOptions();
+                if(isset($options['style'])) {
+                    switch($options['style']) {
+                        case 'normal':
+                            $style = 1;
+                            break;
+                        case 'bold':
+                            $style = 2;
+                            break;
+                        case 'double':
+                            $style = 4;
+                            break;
+                        case 'italic':
+                            $style = 6;
+                            break;
+                    }
+                }
+                else {
+                    $style = 1;
+                }
+                return sprintf("4003%d%02d%s000000000", $style, strlen($string), $string);
             }
             $string = substr($string->getValue(), 0, 32);
             return sprintf("30021%02d%s", strlen($string), $string);
@@ -359,6 +390,49 @@
             $this->afterPrintReceipt($receipt, $commands);
             
             return true;
+        }
+        
+        
+        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $invoiceNumber) {
+            
+            $this->log('--- start invoice ---');
+            
+            $receipt->setIsFiscal(false);
+            $this->_currentReceipt = $receipt;
+            
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("FATTURA ".$invoiceNumber, ['style' => 'double']));
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(date('d/m/Y')));
+            
+            foreach($receipt->getHeader()->getItems() as $item) {
+                $commands->append($this->printItem($item));
+            }
+            
+            
+            foreach($receipt->getFooter()->getItems() as $item) {
+                $commands->append($this->printItem($item));
+            }
+            
+            
+            $this->beforePrintInvoice($receipt, $commands);
+            
+            if($this->debug) {
+                return $commands->getCommands();
+            }
+            
+            foreach($commands->getCommands() as $command) {
+                if(!$this->sendCommand($command)) {
+                    $this->_currentReceipt = null;
+                    return false;
+                }
+            }
+            
+            $this->_currentReceipt = null;
+            $this->log('--- end invoice ---');
+            
+            $this->afterPrintInvoice($receipt, $commands);
+            
+            return true;
+            
         }
         
     }
