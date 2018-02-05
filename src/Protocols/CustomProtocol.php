@@ -98,8 +98,8 @@
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             if(!$this->_currentReceipt->getIsFiscal()) {
-                $string = substr($string->getValue(), 0, 42);
                 $options = $string->getOptions();
+                $string = substr($string->getValue(), 0, 42);
                 if(isset($options['style'])) {
                     switch($options['style']) {
                         case 'normal':
