@@ -48,7 +48,7 @@
         
         }
         
-        public function afterPrintInvocie(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
+        public function afterPrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
         
         }
         
