@@ -116,6 +116,9 @@
                 case \Inoma\Receipt\Items\ClientItem::class:
                     return $this->printClient($item);
                     break;
+                case \Inoma\Receipt\Items\RawItem::class:
+                    return $item->getValue();
+                    break;
                 default:
                     throw new NotImplementedException(get_class($item).' printing not implemented yet');
             }

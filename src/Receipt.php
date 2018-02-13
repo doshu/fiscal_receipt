@@ -91,6 +91,12 @@
          */
         protected $_total = null;
         
+        /**
+         * @var array informazioni aggiuntive
+         */
+        protected $_info = [];
+        
+        
         public function __construct() {
         
            $this->setUuid(Uuid::create());
@@ -577,8 +583,9 @@
             $toPay = $this->getTotal();
             $paid = 0;
             foreach($this->getPayments() as $payment) {
-                $paid += $payment->getValue()??$toPay;
-                $toPay -= $paid;
+                $paymentPay = $payment->getValue()??$toPay;
+                $paid += $paymentPay;
+                $toPay -= $paymentPay;
             }
             return $paid;
         }
@@ -618,6 +625,31 @@
             return $this->_credits;
         }   
         
+        /**
+         * setInfo
+         * 
+         * imposta un informazione aggiuntiva
+         *
+         * @param mixed $key
+         * @param mixed $value
+         * @return this
+         */
+        public function setInfo($key, $value) {
+            $this->_info[$key] = $value;
+            return $this;
+        }
+        
+        /**
+         * getInfo
+         * 
+         * ritorna un informazione aggiuntiva
+         *
+         * @param mixed $key
+         * @return mixed
+         */
+        public function getInfo($key) {
+            return $this->_info[$key]??null;
+        }
         
         public function jsonSerialize() {
             return ['total' => $this->getTotal(true), 'paid' => $this->getPaid(), 'change' => $this->getChange()] + $this->_jsonSerialize();

@@ -38,7 +38,6 @@
         }
         
         public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
-            
             $commandsCollection->prepend('4002');
             $commandsCollection->prepend(sprintf('400121%09d', $this->_parsePrice($receipt->getTotal())));
             $commandsCollection->append('4006');
@@ -114,6 +113,9 @@
                         case 'italic':
                             $style = 6;
                             break;
+                        case 'invoice_total':
+                            $style = 'F';
+                            break;
                     }
                 }
                 else {
@@ -170,7 +172,8 @@
         }
         
         public function printPaymentMethod(\Inoma\Receipt\Receipt\PaymentMethod $payment) {
-            $value = !$payment->getValue()?abs($this->_currentReceipt->getTotal()):$payment->getValue();
+            //$value = !$payment->getValue()?abs($this->_currentReceipt->getTotal()):$payment->getValue();
+            $value = $payment->getPaid();
             switch(get_class($payment)) {
                 case \Inoma\Receipt\Receipt\CashPayment::class:
                     return sprintf("3004%02d%s%09d", strlen("CONTANTI"), "CONTANTI", $this->_parsePrice($value));
@@ -398,12 +401,96 @@
             $this->log('--- start invoice ---');
             
             $receipt->setIsFiscal(false);
+            
             $this->_currentReceipt = $receipt;
             
             $commands = new CommandsCollection();
             
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("FATTURA ".$invoiceNumber, ['style' => 'double']));
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(date('d/m/Y')));
+            
+            $tf = new \splitbrain\phpcli\TableFormatter();
+            $tf->setMaxWidth(42);
+            $tf->setBorder(' '); // nice border between colmns
+            $header = $tf->format(
+                ['20%', '40%', '20%', '20%'],
+                ['Qta', 'Desc', 'Prezzo', 'IVA']
+            );
+            
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($header));
+            
+            $totalPieces = 0;
+            foreach($receipt->getProducts() as $product) {
+                $productString = $tf->format(
+                    ['20%', '40%', '20%', '20%'],
+                    [$product->getQty(), $product->getDescription(), number_format($product->getFinalPrice(), 2), $product->getTax()]
+                );
+                
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($productString));
+                $totalPieces += $product->getQty();
+            }
+            
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\RawItem(sprintf('4003F%02d%s%09d', strlen('IMPORTO EURO'), 'IMPORTO EURO', $this->_parsePrice($receipt->getTotal()))));
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("TOTALE PEZZI ".$totalPieces));
+            
+            foreach($receipt->getPayments() as $payment) {
+                $label = $this->_getPaymentLabel($payment->getCode());
+                $paymentString = $tf->format(
+                    ['70%', '30%'],
+                    [strtoupper($label), number_format($payment->getPaid(), 2)]
+                );
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($paymentString));
+            }
+            $changeString = $tf->format(
+                ['70%', '30%'],
+                ['RESTO', number_format($receipt->getChange(), 2)]
+            );
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($changeString));
+            
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', 32)));
+            
+            $taxSummary = [];
+            foreach($receipt->getProducts() as $product) {
+                if(!isset($taxSummary[$product->getTax()])) {
+                    $taxSummary[$product->getTax()] = 0;
+                }
+                $taxSummary[$product->getTax()] += $product->getFinalPrice();
+            }
+            
+            $taxSummaryHeader = $tf->format(
+                ['*', '30%', '30%'],
+                ['CORRISP', 'IMPONIB', 'IVA']
+            );
+            
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($taxSummaryHeader));
+            foreach($taxSummary as $tax => $total) {
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IVA '.$tax.'%'));
+                $taxSummaryStrings = $tf->format(
+                    ['*', '30%', '30%'],
+                    [number_format($total, 2), number_format($total / (1 + $tax/100), 2), number_format($total - ($total / (1 + $tax/100)), 2)]
+                );
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($taxSummaryStrings));
+            }
+            
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', 32)));
+            
+            $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('DATI DESTINATARIO'));
+            $invoiceRecipient = $receipt->getInvoiceRecipient();
+            if($invoiceRecipient) {
+                $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem($invoiceRecipient->getLabel(), ['style' => 'double']));
+                if($invoiceRecipient->getVat()) {
+                    $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('P.IVA: '.$invoiceRecipient->getVat()));
+                }
+                if($invoiceRecipient->getCf()) {
+                    $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('C.F: '.$invoiceRecipient->getCf()));
+                }
+                if($invoiceRecipient->getAddress()) {
+                    $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('Indirizzo: '));
+                    foreach(explode(',', $invoiceRecipient->getAddress()) as $addressPart) {
+                        $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem(trim($addressPart)));
+                    }
+                }
+            }
             
             foreach($receipt->getHeader()->getItems() as $item) {
                 $commands->append($this->printItem($item));
@@ -434,6 +521,32 @@
             
             return true;
             
+        }
+        
+        protected function _getPaymentLabel($code) {
+        
+            switch($code) {
+                case 'card':
+                    return 'Carta';
+                    break;
+                case 'cash':
+                    return 'Contanti';
+                    break;
+                case 'check':
+                    return 'Assegno';
+                    break;
+                case 'credit':
+                    return 'Credito';
+                    break;
+                case 'meal_voucher':
+                    return 'Buono Pasto';
+                    break;
+                case 'meal_voucher_with_change':
+                    return 'Buono Pasto';
+                    break;
+                default:
+                    return 'Generico';
+            }
         }
         
     }

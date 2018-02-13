@@ -16,19 +16,21 @@
         protected $_price = null;
         protected $_qty = null;
         protected $_description = null;
+        protected $_tax = null;
         
         protected $_discounts = [];
         protected $_increases = [];
         
         protected $_finalPrice = null;
         
-        public function __construct($sku = null, $price = null, $qty = 0, $description = null) {
+        public function __construct($sku = null, $price = null, $qty = 0, $description = null, $tax = null) {
             parent::__construct();
             $this
                 ->setSku($sku)
                 ->setPrice($price)
                 ->setQty($qty)
-                ->setDescription($description);
+                ->setDescription($description)
+                ->setTax($tax);
         }
         
         /**
@@ -223,6 +225,31 @@
             $this->_finalPrice = $finalPrice;
             return $this;
         }
+        
+        /**
+         * getTax
+         * 
+         * imposta l'iva del prodotto
+         *
+         * @param number $tax
+         * @return $this
+         */
+        public function setTax($tax) {
+            $this->_tax = $tax;
+            return $this;
+        }
+        
+        /**
+         * getTax
+         * 
+         * ritorna l'iva del prodotto
+         *
+         * @return number
+         */
+        public function getTax() {
+            return $this->_tax;
+        }
+        
         
         public function jsonSerialize() {
             return ['finalPrice' => $this->getFinalPrice()] + $this->_jsonSerialize();
