@@ -13,10 +13,6 @@
         
         private $_maxDescLength = 22;
         
-        private $_charOverride = [
-            '€' => "\x7f"  
-        ];
-        
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             if(!$receipt->getIsFiscal()) {
                 $commandsCollection->prepend('j');
@@ -33,7 +29,7 @@
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
             $cmds = [];
-            $cmds[] = sprintf('"%s"%s*%sH%sR', substr($product->getDescription(), 0, $this->_maxDescLength), $product->getQty(), $this->_parsePrice($product->getPrice()), 1);
+            $cmds[] = sprintf('"%s"%s*%sH%sR', substr($this->s($product->getDescription()), 0, $this->_maxDescLength), $product->getQty(), $this->_parsePrice($product->getPrice()), 1);
             foreach($product->getDiscounts() as $discount) {
                 switch($discount->getCode()) {
                     case 'byPercentage':
@@ -62,13 +58,13 @@
         public function printReturn(\Inoma\Receipt\Items\ReturnItem $return) {
             $cmd = $this->_currentReceipt->getTotal() < 0 && !$this->_printer->supportsNegativeTotal()?
                 '"%s"%s*%sH%sR':'9M"%s"%s*%sH%sR';
-            return sprintf($cmd, substr($return->getDescription(), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
+            return sprintf($cmd, substr($this->s($return->getDescription()), 0, $this->_maxDescLength), $return->getQty(), $return->getPrice(), 1);
         }
         
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             return sprintf(
                 '"%s"@', 
-                str_replace(array_keys($this->_charOverride), array_values($this->_charOverride), $string->getValue())
+                $this->s($string->getValue())
             );
         }
         
@@ -156,13 +152,13 @@
         }
         
         public function printOperator(\Inoma\Receipt\Items\OperatorItem $operator) {
-            return sprintf('"%s%s"@', 'Operatore:', substr($operator->getLabel(), 0, $this->_maxDescLength - 10));
+            return sprintf('"%s%s"@', 'Operatore:', substr($this->s($operator->getLabel()), 0, $this->_maxDescLength - 10));
         }
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client) {
             $cmds = [];
             if($client->getLabel()) {
-                $cmds[] = sprintf('"%s"@38F', substr($client->getLabel(), 0, $this->_maxDescLength));
+                $cmds[] = sprintf('"%s"@38F', substr($this->s($client->getLabel()), 0, $this->_maxDescLength));
             }
             if($client->getCode()) {
                 $cmds[] = sprintf('"Cod. Cliente: %s"@38F', substr($client->getCode(), 0, $this->_maxDescLength - 14));
@@ -183,19 +179,19 @@
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             if($discount->getCode() == 'byPercentage') {
-                return sprintf('"%s"%s*2M', $discount->getDescription(), $discount->getValue());
+                return sprintf('"%s"%s*2M', $this->s($discount->getDescription()), $discount->getValue());
             }
             elseif($discount->getCode() == 'byValue') {
-                return sprintf('"%s"%sH4M', $discount->getDescription(), $this->_parsePrice($discount->getValue()));
+                return sprintf('"%s"%sH4M', $this->s($discount->getDescription()), $this->_parsePrice($discount->getValue()));
             }
         }
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
             if($increase->getCode() == 'byPercentage') {
-                return sprintf('"%s"%s*6M', $increase->getDescription(), $increase->getValue());
+                return sprintf('"%s"%s*6M', $this->s($increase->getDescription()), $increase->getValue());
             }
             elseif($increase->getCode() == 'byValue') {
-                return sprintf('"%s"%sH8M', $increase->getDescription(), $this->_parsePrice($increase->getValue()));
+                return sprintf('"%s"%sH8M', $this->s($increase->getDescription()), $this->_parsePrice($increase->getValue()));
             }
         }
         

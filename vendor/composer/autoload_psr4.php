@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'splitbrain\\phpcli\\' => array($vendorDir . '/splitbrain/php-cli/src'),
     'Inoma\\Receipt\\' => array($baseDir . '/src'),
+    'Cake\\Utility\\' => array($vendorDir . '/cakephp/utility'),
 );

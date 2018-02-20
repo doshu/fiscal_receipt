@@ -3,10 +3,12 @@
     namespace Inoma\Receipt\Items\Products;
     
     use Inoma\Receipt\Utility\JsonSerializeTrait;
+    use Inoma\Receipt\Items\InfoAwareTrait;
     
     abstract class PriceModifier implements \JsonSerializable {
     
         use JsonSerializeTrait;
+        use InfoAwareTrait;
         
         protected $_code = null;
         protected $_value = null;
@@ -38,6 +40,8 @@
         public function getDescription() {
             return $this->_description;
         }
+        
+        
     }
 
 ?>

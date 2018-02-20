@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit9bc7f1e747daad2a3908858df83d045e
 {
+    public static $files = array (
+        '948ad5488880985ff1c06721a4e447fe' => __DIR__ . '/..' . '/cakephp/utility/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         's' => 
         array (
@@ -14,6 +18,10 @@ class ComposerStaticInit9bc7f1e747daad2a3908858df83d045e
         'I' => 
         array (
             'Inoma\\Receipt\\' => 14,
+        ),
+        'C' => 
+        array (
+            'Cake\\Utility\\' => 13,
         ),
     );
 
@@ -25,6 +33,10 @@ class ComposerStaticInit9bc7f1e747daad2a3908858df83d045e
         'Inoma\\Receipt\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Cake\\Utility\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cakephp/utility',
         ),
     );
 

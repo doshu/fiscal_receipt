@@ -139,6 +139,10 @@
                 $logger($message);
             }
         }
+        
+        protected function s($string) {
+            return \Cake\Utility\Text::transliterate($string);
+        }
     }
 
 ?>

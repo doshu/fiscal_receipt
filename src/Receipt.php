@@ -4,6 +4,7 @@
     
     use Inoma\Receipt\Utility\Uuid;
     use Inoma\Receipt\Utility\JsonSerializeTrait;
+    use Inoma\Receipt\Items\InfoAwareTrait;
     
     use Inoma\Receipt\Parts\{ReceiptHeader, ReceiptBody, ReceiptFooter};
     
@@ -18,6 +19,8 @@
         use JsonSerializeTrait {
             JsonSerializeTrait::jsonSerialize as _jsonSerialize;
         }
+        
+        use InfoAwareTrait;
         
         /**
          * @var string tipologia di scontrino. Default "sales" indica uno scontrino fiscale di vendita
@@ -90,11 +93,6 @@
          * @var float totale dello scontrino
          */
         protected $_total = null;
-        
-        /**
-         * @var array informazioni aggiuntive
-         */
-        protected $_info = [];
         
         
         public function __construct() {
@@ -546,7 +544,6 @@
             foreach($this->getProducts() as $product) {
                 $this->setTotal($this->_total + $product->getFinalPrice());
             } 
-                
             if($applyModifier) {
                 foreach($this->getDiscounts() as $discount) {
                     $discount->apply($this);
@@ -625,36 +622,10 @@
             return $this->_credits;
         }   
         
-        /**
-         * setInfo
-         * 
-         * imposta un informazione aggiuntiva
-         *
-         * @param mixed $key
-         * @param mixed $value
-         * @return this
-         */
-        public function setInfo($key, $value) {
-            $this->_info[$key] = $value;
-            return $this;
-        }
-        
-        /**
-         * getInfo
-         * 
-         * ritorna un informazione aggiuntiva
-         *
-         * @param mixed $key
-         * @return mixed
-         */
-        public function getInfo($key) {
-            return $this->_info[$key]??null;
-        }
         
         public function jsonSerialize() {
             return ['total' => $this->getTotal(true), 'paid' => $this->getPaid(), 'change' => $this->getChange()] + $this->_jsonSerialize();
         }
-        
     }
     
 ?>
