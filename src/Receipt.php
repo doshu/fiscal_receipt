@@ -93,7 +93,7 @@
          * @var float totale dello scontrino
          */
         protected $_total = null;
-        
+        protected $_intermediateTotal = null;
         
         public function __construct() {
         
@@ -522,12 +522,38 @@
         
         
         protected function _rebuildPayments() {
-            $toPay = $this->getTotal();
+            $total = $this->getTotal();
+            $toPay = $total;
             foreach($this->getPayments() as &$payment) {
-                $paid = $payment->getValue()??$toPay;
+                $paid = $payment->getValue()??($total > 0?max(0, $toPay):min(0, $toPay));
                 $payment->setPaid($paid);
                 $toPay -= $paid;
             }
+        }
+        
+        
+        /**
+         * setIntermediateTotal
+         *
+         * imposta un totale intermedio utilizzato durante il calcolo del prezzo finale
+         * 
+         * @param decimal $price
+         * @return $this
+         */
+        public function setIntermediateTotal($total) {
+            $this->_intermediateTotal = $total;
+            return $this;
+        }
+        
+        /**
+         * getIntermediateTotal
+         *
+         * ritorna un totale intermedio utilizzato durante il calcolo del prezzo finale
+         * 
+         * @return decimal
+         */
+        public function getIntermediateTotal() {
+            return $this->_intermediateTotal;
         }
         
         /**
@@ -544,6 +570,7 @@
             foreach($this->getProducts() as $product) {
                 $this->setTotal($this->_total + $product->getFinalPrice());
             } 
+            $this->setIntermediateTotal($this->_total);
             if($applyModifier) {
                 foreach($this->getDiscounts() as $discount) {
                     $discount->apply($this);
@@ -554,9 +581,10 @@
                 }
                 
                 foreach($this->getReturns() as $return) {
-                    $this->setTotal($this->_total - $return->getFinalPrice());
+                    $this->setIntermediateTotal($this->getIntermediateTotal() - $return->getFinalPrice());
                 }
             }
+            $this->setTotal($this->getIntermediateTotal());
             return $this->_total;
         }
         

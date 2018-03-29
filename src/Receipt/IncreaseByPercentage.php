@@ -7,7 +7,7 @@
         protected $_code = "byPercentage";
         
         public function apply(\Inoma\Receipt\Receipt $receipt) {
-            $receipt->setTotal($receipt->getTotal(false) + ($receipt->getTotal(false) / 100 * $this->getValue()));    
+            $receipt->setIntermediateTotal($receipt->getIntermediateTotal() + ($receipt->getIntermediateTotal() / 100 * $this->getValue()));    
         }
         
     }

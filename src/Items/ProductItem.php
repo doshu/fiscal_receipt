@@ -4,16 +4,19 @@
     
     use Inoma\Receipt\Utility\Uuid;
     use Inoma\Receipt\Utility\JsonSerializeTrait;
+    use Inoma\Receipt\Items\InfoAwareTrait;
     
     class ProductItem extends Item {
     
         use JsonSerializeTrait {
             JsonSerializeTrait::jsonSerialize as _jsonSerialize;
         }
+        use InfoAwareTrait;
         
         protected $_publicType = 'product';
         protected $_sku = null;
         protected $_price = null;
+        protected $_intermediatePrice = null;
         protected $_qty = null;
         protected $_description = null;
         protected $_tax = null;
@@ -196,6 +199,30 @@
         }
         
         /**
+         * setIntermediatePrice
+         *
+         * imposta un prezzo intermedio utilizzato durante il calcolo del prezzo finale
+         * 
+         * @param decimal $price
+         * @return $this
+         */
+        public function setIntermediatePrice($price) {
+            $this->_intermediatePrice = $price;
+            return $this;
+        }
+        
+        /**
+         * getIntermediatePrice
+         *
+         * ritorna un prezzo intermedio utilizzato durante il calcolo del prezzo finale
+         * 
+         * @return decimal
+         */
+        public function getIntermediatePrice() {
+            return $this->_intermediatePrice;
+        }
+        
+        /**
          * ritorna il prezzo finale del prodotto
          * $appllyModifier permette di decidere se applicare sconti e maggiorazioni al prezzo
          *
@@ -203,7 +230,7 @@
          * @return number
          */
         public function getFinalPrice($applyModifier = true) {
-            $this->setFinalPrice($this->getPrice() * $this->getQty());
+            $this->setIntermediatePrice($this->getPrice() * $this->getQty());
             if($applyModifier) {
                 foreach($this->getDiscounts() as $discount) {
                     $discount->apply($this);
@@ -212,6 +239,7 @@
                     $increase->apply($this);
                 }
             }
+            $this->setFinalPrice($this->getIntermediatePrice());
             return $this->_finalPrice;
         }
         

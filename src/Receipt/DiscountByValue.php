@@ -7,7 +7,7 @@
         protected $_code = "byValue";
         
         public function apply(\Inoma\Receipt\Receipt $receipt) {
-            $receipt->setTotal(max(0, $receipt->getTotal(false) - $this->getValue()));    
+            $receipt->setIntermediateTotal(max(0, $receipt->getIntermediateTotal() - $this->getValue()));    
         }
         
     }
