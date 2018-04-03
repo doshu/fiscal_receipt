@@ -521,6 +521,19 @@
         }
         
         
+        /**
+         * rimuove tutti i metodo di pagamento applicati allo scontrino
+         *
+         * @param string $uuid
+         * @return $this
+         */
+        public function clearPayments() {
+            $this->_payments = [];
+            $this->_rebuildPayments();
+            return $this;
+        }
+        
+        
         protected function _rebuildPayments() {
             $total = $this->getTotal();
             $toPay = $total;
@@ -653,6 +666,11 @@
         
         public function jsonSerialize() {
             return ['total' => $this->getTotal(true), 'paid' => $this->getPaid(), 'change' => $this->getChange()] + $this->_jsonSerialize();
+        }
+        
+        
+        public function __clone() {
+            $this->setUuid(Uuid::create());
         }
     }
     

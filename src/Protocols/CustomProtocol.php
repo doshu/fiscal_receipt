@@ -268,16 +268,20 @@
         protected function _readFrame() {
             $connection =  $this->_getConnection();
             $frame = "";
+            $timeout = 10;
             do {
+                $start = time();
                 $char = fread($connection, 1);
                 $frame .= $char;
-            } while($char != "\x03");
+                $timeout -= (time() - $start);
+            } while($char != "\x03" && $timeout);
             return $frame;
         }
         
         protected function _getConnection() {
             if($this->_connection === null) {
                 $this->_connection = fsockopen($this->_printer->getIp(), $this->_printer->getPort(), $errno, $errstr, 10);
+                stream_set_timeout($this->_connection, 10);
             }
             return $this->_connection;
         }
