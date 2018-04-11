@@ -58,6 +58,16 @@
         protected $_invoiceRecipient = null;
         
         /**
+         * @var string numero della fattura
+         */
+        protected $_invoiceNumber = null;
+        
+        /**
+         * @var string data della fattura
+         */
+        protected $_invoiceDate = null;
+        
+        /**
          * @var boolean indica se lo scontrino è fiscale o no
          * 
          */
@@ -205,6 +215,50 @@
             $this->_invoiceRecipient = $recipient;
             return $this;
         }
+        
+        /**
+         * ritorna il numero della fattura
+         *
+         * @return string
+         */
+        public function getInvoiceNumber() {
+            return $this->_invoiceNumber;
+        }
+        
+        
+        /**
+         * imposta il numero della fattura
+         *
+         * @param string $number
+         * @return $this
+         */
+        public function setInvoiceNumber($number) {
+            $this->_invoiceNumber = $number;
+            return $this;
+        }
+        
+        
+        /**
+         * ritorna il numero della fattura
+         *
+         * @return string
+         */
+        public function getInvoiceDate() {
+            return $this->_invoiceDate;
+        }
+        
+        
+        /**
+         * imposta il numero della fattura
+         *
+         * @param string $number
+         * @return $this
+         */
+        public function setInvoiceDate(\DateTimeInterface $date) {
+            $this->_invoiceDate = $date;
+            return $this;
+        }
+        
         
         /**
          * ritorna il cliente a cui è stato emesso lo scontrino

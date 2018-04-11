@@ -125,7 +125,7 @@
         }
         
         
-        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $invoiceNumber) {
+        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $printCopy = false) {
             throw new NotImplementedException('Invoice printing not implemented yet');
         }
         

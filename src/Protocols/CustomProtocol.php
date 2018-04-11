@@ -37,10 +37,18 @@
             
         }
         
-        public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
+        public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection, $printCopy) {
+            
             $commandsCollection->prepend('4002');
-            $commandsCollection->prepend(sprintf('400121%09s', $this->_parsePrice($receipt->getTotal())));
-            $commandsCollection->append('4006');
+            if(!$printCopy) {
+                $commandsCollection->prepend(sprintf('400121%09s', $this->_parsePrice($receipt->getTotal())));
+                $commandsCollection->append('4006');
+            }
+            else {
+                $commandsCollection->prepend(sprintf('400110%09s', 0));
+                $commandsCollection->append('4002');
+            }
+            
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
@@ -281,7 +289,9 @@
         protected function _getConnection() {
             if($this->_connection === null) {
                 $this->_connection = fsockopen($this->_printer->getIp(), $this->_printer->getPort(), $errno, $errstr, 10);
-                stream_set_timeout($this->_connection, 10);
+                if($this->_connection) {
+                    stream_set_timeout($this->_connection, 10);
+                }
             }
             return $this->_connection;
         }
@@ -383,7 +393,6 @@
             if($this->debug) {
                 return $commands->getCommands();
             }
-            
             foreach($commands->getCommands() as $command) {
                 if(!$this->sendCommand($command)) {
                     $this->_currentReceipt = null;
@@ -400,7 +409,7 @@
         }
         
         
-        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $invoiceNumber) {
+        public function printInvoice(\Inoma\Receipt\Receipt $receipt, $printCopy = false) {
             
             $this->log('--- start invoice ---');
             
@@ -410,8 +419,16 @@
             
             $commands = new CommandsCollection();
             
-            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("FATTURA ".$invoiceNumber, ['style' => 'double']));
-            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(date('d/m/Y')));
+            $invoiceNumber = $receipt->getInvoiceNumber();
+            $invoiceDate = $receipt->getInvoiceDate();
+            
+            if(!$printCopy) {
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("FATTURA ".$invoiceNumber, ['style' => 'double']));
+            }
+            else {
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("COPIA FATTURA ".$invoiceNumber, ['style' => 'double']));
+            }
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($invoiceDate->format('d/m/Y')));
             
             $tf = new \splitbrain\phpcli\TableFormatter();
             $tf->setMaxWidth(42);
@@ -434,8 +451,12 @@
                 $totalPieces += $product->getQty();
             }
             
-            
-            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\RawItem(sprintf('4003F%02s%s%09s', strlen('IMPORTO EURO'), 'IMPORTO EURO', $this->_parsePrice($receipt->getTotal()))));
+            if(!$printCopy) {
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\RawItem(sprintf('40031%02s%s%09s', strlen('IMPORTO EURO'), 'IMPORTO EURO', $this->_parsePrice($receipt->getTotal()))));
+            }
+            else {
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.$this->_parsePrice($receipt->getTotal())));
+            }
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("TOTALE PEZZI ".$totalPieces));
             
             foreach($receipt->getPayments() as $payment) {
@@ -508,7 +529,7 @@
             }
             
             
-            $this->beforePrintInvoice($receipt, $commands);
+            $this->beforePrintInvoice($receipt, $commands, $printCopy);
             
             if($this->debug) {
                 return $commands->getCommands();

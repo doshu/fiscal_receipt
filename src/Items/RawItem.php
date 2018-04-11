@@ -11,6 +11,7 @@
     class RawItem extends Item {
         
         protected $_value = null;
+        protected $_publicType = 'string'; 
         
         public function __construct($value) {
             parent::__construct();
