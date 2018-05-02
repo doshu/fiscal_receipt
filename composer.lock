@@ -4,23 +4,73 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e47d011d1897ffb97e49080eeb352a61",
+    "content-hash": "a6befd07f2e01a73a5d1c32a1d16f65e",
     "packages": [
         {
-            "name": "cakephp/utility",
-            "version": "3.5.12",
+            "name": "cakephp/core",
+            "version": "3.6.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cakephp/utility.git",
-                "reference": "523d6019dea4c0ac9e30d58ae2be6114d0cfd139"
+                "url": "https://github.com/cakephp/core.git",
+                "reference": "680999913146ee4935aef3fd87c296c76503bae0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/utility/zipball/523d6019dea4c0ac9e30d58ae2be6114d0cfd139",
-                "reference": "523d6019dea4c0ac9e30d58ae2be6114d0cfd139",
+                "url": "https://api.github.com/repos/cakephp/core/zipball/680999913146ee4935aef3fd87c296c76503bae0",
+                "reference": "680999913146ee4935aef3fd87c296c76503bae0",
                 "shasum": ""
             },
             "require": {
+                "cakephp/utility": "^3.6.0",
+                "php": ">=5.6.0"
+            },
+            "suggest": {
+                "cakephp/event": "To use PluginApplicationInterface or plugin applications."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cake\\Core\\": "."
+                },
+                "files": [
+                    "functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CakePHP Community",
+                    "homepage": "https://github.com/cakephp/core/graphs/contributors"
+                }
+            ],
+            "description": "CakePHP Framework Core classes",
+            "homepage": "https://cakephp.org",
+            "keywords": [
+                "cakephp",
+                "core",
+                "framework"
+            ],
+            "time": "2018-04-24T01:48:33+00:00"
+        },
+        {
+            "name": "cakephp/utility",
+            "version": "3.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cakephp/utility.git",
+                "reference": "590357de74b0168807a7651fa926217294d72767"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cakephp/utility/zipball/590357de74b0168807a7651fa926217294d72767",
+                "reference": "590357de74b0168807a7651fa926217294d72767",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/core": "^3.6.0",
                 "php": ">=5.6.0"
             },
             "suggest": {
@@ -56,7 +106,62 @@
                 "string",
                 "utility"
             ],
-            "time": "2018-01-04T15:33:21+00:00"
+            "time": "2018-04-26T05:50:08+00:00"
+        },
+        {
+            "name": "mike42/escpos-php",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mike42/escpos-php.git",
+                "reference": "71e99104e39982cfd76de31256df466bd9156f61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mike42/escpos-php/zipball/71e99104e39982cfd76de31256df466bd9156f61",
+                "reference": "71e99104e39982cfd76de31256df466bd9156f61",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^5.3",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "suggest": {
+                "ext-gd": "Used for image printing if present.",
+                "ext-imagick": "Will be used for image printing if present. Required for PDF printing or use of custom fonts.",
+                "guzzlehttp/guzzle": "Allows the use of the ApiConnector to send print jobs over HTTP."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mike42\\": "src/Mike42"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Billington",
+                    "email": "michael.billington@gmail.com"
+                }
+            ],
+            "description": "PHP receipt printer library for use with ESC/POS-compatible thermal and impact printers",
+            "homepage": "https://github.com/mike42/escpos-php",
+            "keywords": [
+                "ESC-POS",
+                "driver",
+                "escpos",
+                "print",
+                "receipt"
+            ],
+            "time": "2018-03-17T04:29:19+00:00"
         },
         {
             "name": "splitbrain/php-cli",
