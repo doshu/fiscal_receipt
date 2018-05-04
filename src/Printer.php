@@ -14,6 +14,8 @@
         
         public function supportsNoChangePayment();
         
+        public function getMaxLineLength();
+        
     }
 
 ?>

@@ -116,6 +116,9 @@
                 case \Inoma\Receipt\Items\ClientItem::class:
                     return $this->printClient($item);
                     break;
+                case \Inoma\Receipt\Items\ImageItem::class:
+                    return $this->printImage($item);
+                    break;
                 case \Inoma\Receipt\Items\RawItem::class:
                     return $item->getValue();
                     break;

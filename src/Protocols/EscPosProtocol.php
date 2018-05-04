@@ -27,21 +27,24 @@
         }
         
         public function beforePrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
-            $this->_getConnection()->feed(5);
+            $this->_getConnection()->feed(2);
         }
         
         public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection, $printCopy) {
-            $this->_getConnection()->feed(5);
+            $this->_getConnection()->feed(2);
+            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("SCONTRINO", ['style' => 'double']));
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             $this->_getConnection()->feed(8);
             $this->_getConnection()->cut();
+            $this->_getConnection()->close();
         }
         
         public function afterPrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             $this->_getConnection()->feed(8);
             $this->_getConnection()->cut();
+            $this->_getConnection()->close();
         }
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
@@ -49,7 +52,7 @@
             $lines[] = sprintf("%sX %s: %s", $product->getQty(), $this->s($product->getDescription()), $this->_parsePrice($product->getPrice() * $product->getQty()));
             
             foreach($product->getDiscounts() as $discount) {
-                $desc = substr($this->s($discount->getDescription()), 0, $this->_printer->max_line_length);
+                $desc = substr($this->s($discount->getDescription()), 0, $this->_printer->getMaxLineLength());
                 switch($discount->getCode()) {
                     case 'byPercentage':
                         $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $discount->getValue()));
@@ -60,7 +63,7 @@
                 }
             }
             foreach($product->getIncreases() as $increase) {
-                $desc = substr($this->s($increase->getDescription()), 0, $this->_printer->max_line_length);
+                $desc = substr($this->s($increase->getDescription()), 0, $this->_printer->getMaxLineLength());
                 switch($increase->getCode()) {
                     case 'byPercentage':
                         $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $increase->getValue()));
@@ -84,7 +87,7 @@
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             $options = $string->getOptions();
             
-            $string = substr($this->s($string->getValue()), 0, $this->_printer->max_line_length);
+            $string = substr($this->s($string->getValue()), 0, $this->_printer->getMaxLineLength());
             if(isset($options['style'])) {
                 $styles = explode('|', $options['style']);
                 foreach($styles as $style) {
@@ -107,8 +110,11 @@
                     }
                 }
             }
-            
+            if(in_array('center', $styles)) {
+                $this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+            }
             $this->_printLines($string);
+            $this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_LEFT);
             $this->_getConnection()->selectPrintMode(Escpos\Printer::MODE_FONT_A);
             $this->_getConnection()->setReverseColors(false);
         }
@@ -198,7 +204,7 @@
         }
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
-            $desc = substr($this->s($discount->getDescription()), 0, $this->_printer->max_line_length);
+            $desc = substr($this->s($discount->getDescription()), 0, $this->_printer->getMaxLineLength());
             if($discount->getCode() == 'byPercentage') {
                 $line = sprintf("%s: %s", $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $discount->getValue()));
             }
@@ -209,7 +215,7 @@
         }
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
-            $desc = substr($this->s($increase->getDescription()), 0, $this->_printer->max_line_length);
+            $desc = substr($this->s($increase->getDescription()), 0, $this->_printer->getMaxLineLength());
             if($increase->getCode() == 'byPercentage') {
                 $line = sprintf("%s: %s", $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $increase->getValue()));
             }
@@ -219,12 +225,18 @@
             $this->_printLines($line);
         }
         
+        public function printImage(\Inoma\Receipt\Items\ImageItem $image) {
+            //$this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+            $escposimage = \Mike42\Escpos\EscposImage::load($image->getImage(), false);
+            $this->_getConnection()->bitImage($escposimage);
+            //$this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_LEFT);
+            $this->_getConnection()->feed(1);
+        }
+        
         protected function _getConnection() {
             if($this->_connection === null) {
                 $connector = new Escpos\PrintConnectors\NetworkPrintConnector($this->_printer->getIp(), $this->_printer->getPort(), 10);
                 $this->_connection = new EscPos\Printer($connector);
-                debug($this->_connection);
-                exit;
             }
             return $this->_connection;
         }
@@ -243,8 +255,8 @@
         }
         
         protected function _parsePrice($value) {
-            $fmt = new \NumberFormatter( 'de_DE', \NumberFormatter::CURRENCY );
-            return $fmt->formatCurrency($value, "EUR");
+            $fmt = new \NumberFormatter( 'de_DE', \NumberFormatter::DECIMAL );
+            return $fmt->format($value).' E';
         }
         
         
@@ -255,10 +267,6 @@
             
             try {
                 $commands = new CommandsCollection();
-                $noChangeAddition = round($receipt->getPaid() - $receipt->getTotal() - $receipt->getChange(), 2);
-                if($noChangeAddition > 0) {
-                    $receipt->addIncrease(new \Inoma\Receipt\Receipt\IncreaseByValue($noChangeAddition, "Varie"));
-                }
                 
                 $this->beforePrintReceipt($receipt, $commands);
                 
@@ -282,8 +290,16 @@
                     $this->printReceiptIncrease($increase);
                 }
                 
+                if($receipt->getIsFiscal()) {
+                    $this->printItem(new \Inoma\Receipt\Items\StringItem("TOTALE: ".$this->_parsePrice($receipt->getTotal()), ['style' => 'double']));
+                }
+                
                 foreach($receipt->getPayments() as $payment) {
                     $this->printPaymentMethod($payment);
+                }
+                
+                if($receipt->getIsFiscal()) {
+                    $this->printItem(new \Inoma\Receipt\Items\StringItem("RESTO: ".$this->_parsePrice($receipt->getChange()), ['style' => 'double']));
                 }
                 
                 if($receipt->getOperator()) {
@@ -317,7 +333,6 @@
             
             $this->_currentReceipt = $receipt;
             $commands = new CommandsCollection();
-            
             try {
             
                 $invoiceNumber = $receipt->getInvoiceNumber();
@@ -329,10 +344,11 @@
                 else {
                     $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("COPIA FATTURA ".$invoiceNumber, ['style' => 'double']));
                 }
+                
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($invoiceDate->format('d/m/Y')));
                 
                 $tf = new \splitbrain\phpcli\TableFormatter();
-                $tf->setMaxWidth($this->_printer->max_line_length);
+                $tf->setMaxWidth($this->_printer->getMaxLineLength());
                 $tf->setBorder(' '); // nice border between colmns
                 $header = $tf->format(
                     ['20%', '40%', '20%', '20%'],
@@ -345,7 +361,7 @@
                 foreach($receipt->getProducts() as $product) {
                     $productString = $tf->format(
                         ['20%', '40%', '20%', '20%'],
-                        [$product->getQty(), $this->s($product->getDescription()), number_format($product->getFinalPrice(), 2), $product->getTax()]
+                        [$product->getQty(), $this->s($product->getDescription()), $this->_parsePrice($product->getFinalPrice()), $product->getTax()]
                     );
                     
                     $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($productString));
@@ -359,17 +375,17 @@
                     $label = $this->_getPaymentLabel($payment->getCode());
                     $paymentString = $tf->format(
                         ['70%', '30%'],
-                        [strtoupper($this->s($label)), number_format($payment->getPaid(), 2)]
+                        [strtoupper($this->s($label)), $this->_parsePrice($payment->getPaid())]
                     );
                     $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($paymentString));
                 }
                 $changeString = $tf->format(
                     ['70%', '30%'],
-                    ['RESTO', number_format($receipt->getChange(), 2)]
+                    ['RESTO', $this->_parsePrice($receipt->getChange())]
                 );
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($changeString));
                 
-                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', 32)));
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', $this->_printer->getMaxLineLength())));
                 
                 $taxSummary = [];
                 foreach($receipt->getProducts() as $product) {
@@ -391,12 +407,12 @@
                     $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IVA '.$tax.'%'));
                     $taxSummaryStrings = $tf->format(
                         ['*', '30%', '30%'],
-                        [number_format($total, 2), number_format($total / (1 + $tax/100), 2), number_format($total - ($total / (1 + $tax/100)), 2)]
+                        [$this->_parsePrice($total), $this->_parsePrice($total / (1 + $tax/100)), $this->_parsePrice($total - ($total / (1 + $tax/100)))]
                     );
                     $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($taxSummaryStrings));
                 }
                 
-                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', 32)));
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', $this->_printer->getMaxLineLength())));
                 
                 $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('DATI DESTINATARIO'));
                 $invoiceRecipient = $receipt->getInvoiceRecipient();

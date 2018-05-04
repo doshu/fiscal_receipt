@@ -32,6 +32,8 @@
         
         public function printClient(\Inoma\Receipt\Items\ClientItem $client);
         
+        public function printImage(\Inoma\Receipt\Items\ImageItem $image);
+        
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount);
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase);

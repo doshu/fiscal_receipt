@@ -195,6 +195,10 @@
             }
         }
         
+        public function printImage(\Inoma\Receipt\Items\ImageItem $image) {
+            return null;
+        }
+        
         public function sendCommand($command) {
             $this->log($command);
             $fp = fsockopen($this->_printer->getIp(), $this->_printer->getPort(), $errno, $errstr, 10);

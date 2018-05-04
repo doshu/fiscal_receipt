@@ -106,29 +106,37 @@
         public function printString(\Inoma\Receipt\Items\StringItem $string) {
             if(!$this->_currentReceipt->getIsFiscal()) {
                 $options = $string->getOptions();
-                $string = substr($this->s($string->getValue()), 0, 42);
+                $string = substr($this->s($string->getValue()), 0, $this->_printer->getMaxLineLength());
                 if(isset($options['style'])) {
-                    switch($options['style']) {
-                        case 'normal':
-                            $style = 1;
-                            break;
-                        case 'bold':
-                            $style = 2;
-                            break;
-                        case 'double':
-                            $style = 4;
-                            break;
-                        case 'italic':
-                            $style = 6;
-                            break;
-                        case 'invoice_total':
-                            $style = 'F';
-                            break;
+                    $styles = explode('|', $options['style']);
+                    foreach($styles as $_style) {
+                        switch($_style) {
+                            case 'normal':
+                                $style = 1;
+                                break;
+                            case 'bold':
+                                $style = 2;
+                                break;
+                            case 'double':
+                                $style = 4;
+                                break;
+                            case 'italic':
+                                $style = 6;
+                                break;
+                            case 'invoice_total':
+                                $style = 'F';
+                                break;
+                        }
+                    }
+                    if(in_array('center', $styles)) {
+                        $pad = $this->_printer->getMaxLineLength() - strlen($string);
+                        $string = str_repeat(' ', (int)$pad / 2).$string.str_repeat(' ', ceil($pad / 2));
                     }
                 }
                 else {
                     $style = 1;
                 }
+                
                 return sprintf("4003%d%02s%s000000000", $style, strlen($string), $string);
             }
             $string = substr($string->getValue(), 0, 32);
@@ -235,6 +243,12 @@
             
             return implode("\n", $cmds);
         }
+        
+        
+        public function printImage(\Inoma\Receipt\Items\ImageItem $image) {
+            return null;
+        }
+        
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             $desc = substr($this->s($discount->getDescription()), 0, $this->_maxDescLength);
@@ -431,7 +445,7 @@
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($invoiceDate->format('d/m/Y')));
             
             $tf = new \splitbrain\phpcli\TableFormatter();
-            $tf->setMaxWidth(42);
+            $tf->setMaxWidth($this->_printer->getMaxLineLength());
             $tf->setBorder(' '); // nice border between colmns
             $header = $tf->format(
                 ['20%', '40%', '20%', '20%'],
