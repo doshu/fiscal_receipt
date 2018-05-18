@@ -38,12 +38,14 @@
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             $this->_getConnection()->feed(8);
             $this->_getConnection()->cut();
+            $this->openCashDrawer();
             $this->_getConnection()->close();
         }
         
         public function afterPrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
             $this->_getConnection()->feed(8);
             $this->_getConnection()->cut();
+            $this->openCashDrawer();
             $this->_getConnection()->close();
         }
         
@@ -239,6 +241,10 @@
                 $this->_connection = new EscPos\Printer($connector);
             }
             return $this->_connection;
+        }
+        
+        public function openCashDrawer() {
+            $this->_getConnection()->pulse();        
         }
         
         public function cancel() {

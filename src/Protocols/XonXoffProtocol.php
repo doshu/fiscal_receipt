@@ -24,7 +24,7 @@
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
-        
+            $this->openCashDrawer();
         }
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
@@ -210,6 +210,10 @@
 			    return true;
 		    }
 		    return false;
+        }
+        
+        public function openCashDrawer() {
+            return $this->sendCommand('a');   
         }
         
         public function cancel() {

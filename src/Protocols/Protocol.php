@@ -40,6 +40,8 @@
         
         public function cancel();
         
+        public function openCashDrawer();
+        
         public function dailyFiscalReset();
         
         public function sendCommand($command);

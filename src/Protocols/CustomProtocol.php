@@ -52,11 +52,11 @@
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
-        
+            $this->openCashDrawer();
         }
         
         public function afterPrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
-        
+            $this->openCashDrawer();
         }
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
@@ -308,6 +308,10 @@
                 }
             }
             return $this->_connection;
+        }
+        
+        public function openCashDrawer() {
+            return $this->sendCommand("70081");          
         }
         
         public function cancel() {
