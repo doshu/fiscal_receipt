@@ -608,7 +608,7 @@
          * @return $this
          */
         public function setIntermediateTotal($total) {
-            $this->_intermediateTotal = $total;
+            $this->_intermediateTotal = round($total, 2);
             return $this;
         }
         
@@ -662,7 +662,7 @@
          * @return $this
          */
         public function setTotal($total) {
-            $this->_total = $total;
+            $this->_total = round($total, 2);
             return $this;
         }
         
@@ -725,6 +725,11 @@
         
         public function __clone() {
             $this->setUuid(Uuid::create());
+            foreach($this as $key => $val) {
+                if (is_object($val) || (is_array($val))) {
+                    $this->{$key} = unserialize(serialize($val));
+                }
+            }       
         }
     }
     

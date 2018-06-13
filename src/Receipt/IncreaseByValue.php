@@ -8,6 +8,7 @@
         
         public function apply(\Inoma\Receipt\Receipt $receipt) {
             $receipt->setIntermediateTotal($receipt->getIntermediateTotal() + $this->getValue());    
+            $this->setRealValue($this->getValue());
         }
         
     }

@@ -11,6 +11,7 @@
         protected $_code = null;
         protected $_value = null;
         protected $_description = null;
+        protected $_realValue = null;
         
         public function __construct($value = null, $description = null) {
             $this->setValue($value);
@@ -39,6 +40,14 @@
             return $this->_description;
         }
         
+        public function setRealValue($value) {
+            $this->_realValue = round($value, 2);
+            return $this;
+        } 
+        
+        public function getRealValue() {
+            return $this->_realValue;
+        } 
     }
 
 ?>

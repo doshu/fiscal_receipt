@@ -111,10 +111,12 @@
                             break;
                     }
                 }
+                
+                if(in_array('center', $styles)) {
+                    $this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_CENTER);
+                }
             }
-            if(in_array('center', $styles)) {
-                $this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_CENTER);
-            }
+            
             $this->_printLines($string);
             $this->_getConnection()->setJustification(Escpos\Printer::JUSTIFY_LEFT);
             $this->_getConnection()->selectPrintMode(Escpos\Printer::MODE_FONT_A);

@@ -7,7 +7,9 @@
         protected $_code = "byPercentage";
         
         public function apply(\Inoma\Receipt\Items\ProductItem $product) {
-            $product->setIntermediatePrice($product->getIntermediatePrice() - ($product->getIntermediatePrice() / 100 * $this->getValue()));    
+            $discount = ($product->getIntermediatePrice() / 100 * $this->getValue());
+            $product->setIntermediatePrice($product->getIntermediatePrice() - $discount);
+            $this->setRealValue($discount);    
         }
         
     }

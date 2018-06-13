@@ -362,9 +362,7 @@
         
         public function printReceipt(\Inoma\Receipt\Receipt $receipt) {
             $this->log('--- start receipt ---');
-            
             $this->_currentReceipt = $receipt;
-            
             $commands = new CommandsCollection();
             
             if(!$this->_printer->supportsNoChangePayment()) {
@@ -411,6 +409,7 @@
             if($this->debug) {
                 return $commands->getCommands();
             }
+            
             foreach($commands->getCommands() as $command) {
                 if(!$this->sendCommand($command)) {
                     $this->_currentReceipt = null;
