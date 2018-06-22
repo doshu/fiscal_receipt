@@ -32,7 +32,6 @@
         
         public function beforePrintInvoice(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection, $printCopy) {
             $this->_getConnection()->feed(2);
-            $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("SCONTRINO", ['style' => 'double']));
         }
         
         public function afterPrintReceipt(\Inoma\Receipt\Receipt $receipt, \Inoma\Receipt\Protocols\CommandsCollection $commandsCollection) {
@@ -47,6 +46,7 @@
             $this->_getConnection()->cut();
             $this->openCashDrawer();
             $this->_getConnection()->close();
+            $this->_connection = null;
         }
         
         public function printProduct(\Inoma\Receipt\Items\ProductItem $product) {
@@ -286,10 +286,6 @@
                     $this->printItem($item);
                 }
                 
-                foreach($receipt->getFooter()->getItems() as $item) {
-                    $this->printItem($item);
-                }
-                
                 foreach($receipt->getDiscounts() as $discount) {
                     $this->printReceiptDiscount($discount);
                 }
@@ -318,6 +314,10 @@
                     $this->printClient($receipt->getClient());
                 }
                 
+                foreach($receipt->getFooter()->getItems() as $item) {
+                    $this->printItem($item);
+                }
+                
                 $this->_currentReceipt = null;
                 $this->log('--- end receipt ---');
                 $this->afterPrintReceipt($receipt, $commands);
@@ -334,7 +334,6 @@
         
         
         public function printInvoice(\Inoma\Receipt\Receipt $receipt, $printCopy = false) {
-            
             $this->log('--- start invoice ---');
             
             $receipt->setIsFiscal(false);
@@ -440,20 +439,22 @@
                     }
                 }
                 
-                $this->beforePrintInvoice($receipt, $commands, $printCopy);
+                for($i = 0; $i < ($printCopy?1:2); $i++) {
+                    $this->beforePrintInvoice($receipt, $commands, $printCopy);
+                    
+                    foreach($receipt->getHeader()->getItems() as $item) {
+                        $this->printItem($item);
+                    }
+                    
+                    foreach($receipt->getFooter()->getItems() as $item) {
+                        $this->printItem($item);
+                    }
                 
-                
-                foreach($receipt->getHeader()->getItems() as $item) {
-                    $this->printItem($item);
-                }
-                
-                foreach($receipt->getFooter()->getItems() as $item) {
-                    $this->printItem($item);
+                    $this->log('--- end invoice ---');
+                    $this->afterPrintInvoice($receipt, $commands);
                 }
                 
                 $this->_currentReceipt = null;
-                $this->log('--- end invoice ---');
-                $this->afterPrintInvoice($receipt, $commands);
                 
                 return true;
             }
@@ -463,7 +464,6 @@
                 $this->log('--- end invoice ---');
                 return false;
             }
-            
         }
         
         protected function _getPaymentLabel($code) {
