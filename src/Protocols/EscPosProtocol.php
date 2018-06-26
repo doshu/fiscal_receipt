@@ -282,7 +282,8 @@
                     $this->printItem($item);
                 }
                 
-                foreach($receipt->getBody()->getItems() as $item) {
+                $aggregator = new \Inoma\Receipt\Items\ItemsAggregator();
+                foreach($aggregator->aggregate($receipt->getBody()->getItems()) as $item) {
                     $this->printItem($item);
                 }
                 
@@ -365,7 +366,8 @@
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($header));
                 
                 $totalPieces = 0;
-                foreach($receipt->getProducts() as $product) {
+                $aggregator = new \Inoma\Receipt\Items\ItemsAggregator();
+                foreach($aggregator->aggregate($receipt->getProducts()) as $product) {
                     $productString = $tf->format(
                         ['20%', '40%', '20%', '20%'],
                         [$product->getQty(), $this->s($product->getDescription()), $this->_parsePrice($product->getFinalPrice()), $product->getTax()]
@@ -431,9 +433,9 @@
                     if($invoiceRecipient->getCf()) {
                         $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('C.F: '.$invoiceRecipient->getCf()));
                     }
-                    if($invoiceRecipient->getAddress()) {
+                    if($invoiceRecipient->getFullAddress()) {
                         $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('Indirizzo: '));
-                        foreach(explode(',', $invoiceRecipient->getAddress()) as $addressPart) {
+                        foreach(explode(',', $invoiceRecipient->getFullAddress()) as $addressPart) {
                             $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem(trim($this->s($addressPart))));
                         }
                     }

@@ -37,7 +37,8 @@
                 $commands->append($this->printItem($item));
             }
             
-            foreach($receipt->getBody()->getItems() as $item) {
+            $aggregator = new \Inoma\Receipt\Items\ItemsAggregator();
+            foreach($aggregator->aggregate($receipt->getBody()->getItems()) as $item) {
                 $commands->append($this->printItem($item));
             }
             

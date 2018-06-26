@@ -3,8 +3,13 @@
     namespace Inoma\Receipt\Items;
     
     use Inoma\Receipt\Utility\Uuid;
+    use Inoma\Receipt\Utility\JsonSerializeTrait;
     
     class ClientItem extends Item {
+    
+        use JsonSerializeTrait {
+            JsonSerializeTrait::jsonSerialize as _jsonSerialize;
+        }
         
         protected $_publicType = 'client';
         protected $_code = null;
@@ -12,13 +17,31 @@
         protected $_cf = null;
         protected $_vat = null;
         protected $_label = null;
+        protected $_name = null;
+        protected $_surname = null;
+        protected $_businessName = null;
+        protected $_email = null;
+        protected $_birthday = null;
+        protected $_address = null;
+        protected $_zip = null;
+        protected $_city = null;
+        protected $_province = null;
         
         public function __construct(
             $code = null, 
             $cardCode = null, 
             $cf = null, 
             $vat = null, 
-            $label = null
+            $label = null,
+            $name =  null,
+            $surname = null,
+            $businessName = null,
+            $email = null,
+            $birthday = null,
+            $address = null,
+            $zip = null,
+            $city = null,
+            $province = null
         ) {
             parent::__construct();
             $this->setCode($code);
@@ -26,6 +49,15 @@
             $this->setCf($cf);
             $this->setVat($vat);
             $this->setLabel($label);
+            $this->setName($name);
+            $this->setSurname($surname);
+            $this->setBusinessName($businessName);
+            $this->setEmail($email);
+            $this->setBirthday($birthday);
+            $this->setAddress($address);
+            $this->setZip($zip);
+            $this->setCity($city);
+            $this->setProvince($province);
         } 
         
         /**
@@ -127,6 +159,105 @@
          */
         public function getLabel() {
             return $this->_label;
+        }
+        
+        public function setName($name) {
+            $this->_name = $name;
+            return $this;
+        }
+        
+        public function getName() {
+            return $this->_name;
+        }
+        
+        public function setSurname($surname) {
+            $this->_surname = $surname;
+            return $this;
+        }
+        
+        public function getSurname() {
+            return $this->_surname;
+        }
+        
+        public function setBusinessName($businessName) {
+            $this->_businessName = $businessName;
+            return $this;
+        }
+        
+        public function getBusinessName() {
+            return $this->_businessName;
+        }
+        
+        public function setEmail($email) {
+            $this->_email = $email;
+            return $this;
+        }
+        
+        public function getEmail() {
+            return $this->_email;
+        }
+        
+        public function setBirthday($birthday) {
+            $this->_birthday = $birthday;
+            return $this;
+        }
+        
+        public function getBirthday() {
+            return $this->_birthday;
+        }
+        
+        public function setAddress($address) {
+            $this->_address = $address;
+            return $this;
+        }
+        
+        public function getAddress() {
+            return $this->_address;
+        }
+        
+        public function setZip($zip) {
+            $this->_zip = $zip;
+            return $this;
+        }
+        
+        public function getZip() {
+            return $this->_zip;
+        }
+        
+        public function setCity($city) {
+            $this->_city = $city;
+            return $this;
+        }
+        
+        public function getCity() {
+            return $this->_city;
+        }
+        
+        public function setProvince($province) {
+            $this->_province = $province;
+            return $this;
+        }
+        
+        public function getProvince() {
+            return $this->_province;
+        }
+        
+        public function getFullAddress() {
+            $address = $this->_address;
+            if($this->_zip) {
+                $address .= ", ".$this->_zip;
+            }
+            if($this->_city) {
+                $address .= ", ".$this->_city;
+            }
+            if($this->_province) {
+                $address .= ", ".$this->_province;
+            }
+            return $address;
+        }
+        
+        public function jsonSerialize() {
+            return ['fullAddress' => $this->getFullAddress()] + $this->_jsonSerialize();
         }
     }
 

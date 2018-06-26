@@ -204,6 +204,7 @@
                     return sprintf("3004%02s%s%09s", strlen("BUONO PASTO"), "BUONO PASTO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\CreditPayment::class:
+                    //should be 3005?
                     return sprintf("3004%02s%s%09s", strlen("CREDITO"), "CREDITO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\GenericPayment::class:
@@ -376,7 +377,8 @@
                 $commands->append($this->printItem($item));
             }
             
-            foreach($receipt->getBody()->getItems() as $item) {
+            $aggregator = new \Inoma\Receipt\Items\ItemsAggregator();
+            foreach($aggregator->aggregate($receipt->getBody()->getItems()) as $item) {
                 $commands->append($this->printItem($item));
             }
             
@@ -458,7 +460,9 @@
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($header));
             
             $totalPieces = 0;
-            foreach($receipt->getProducts() as $product) {
+            $aggregator = new \Inoma\Receipt\Items\ItemsAggregator();
+            
+            foreach($aggregator->aggregate($receipt->getProducts()) as $product) {
                 $productString = $tf->format(
                     ['20%', '40%', '20%', '20%'],
                     [$product->getQty(), $this->s($product->getDescription()), number_format($product->getFinalPrice(), 2), $product->getTax()]
@@ -529,9 +533,9 @@
                 if($invoiceRecipient->getCf()) {
                     $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('C.F: '.$invoiceRecipient->getCf()));
                 }
-                if($invoiceRecipient->getAddress()) {
+                if($invoiceRecipient->getFullAddress()) {
                     $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('Indirizzo: '));
-                    foreach(explode(',', $invoiceRecipient->getAddress()) as $addressPart) {
+                    foreach(explode(',', $invoiceRecipient->getFullAddress()) as $addressPart) {
                         $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem(trim($this->s($addressPart))));
                     }
                 }

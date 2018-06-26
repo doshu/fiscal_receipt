@@ -11,4 +11,5 @@ return array(
     'Inoma\\Receipt\\' => array($baseDir . '/src'),
     'Cake\\Utility\\' => array($vendorDir . '/cakephp/utility'),
     'Cake\\Core\\' => array($vendorDir . '/cakephp/core'),
+    'Cake\\Collection\\' => array($vendorDir . '/cakephp/collection'),
 );
