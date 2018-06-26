@@ -7,7 +7,6 @@ namespace Composer\Autoload;
 class ComposerStaticInit9bc7f1e747daad2a3908858df83d045e
 {
     public static $files = array (
-        '72142d7b40a3a0b14e91825290b5ad82' => __DIR__ . '/..' . '/cakephp/core/functions.php',
         '948ad5488880985ff1c06721a4e447fe' => __DIR__ . '/..' . '/cakephp/utility/bootstrap.php',
         '028fdea3165c4ba1ecccc83b7fec69fc' => __DIR__ . '/..' . '/cakephp/collection/functions.php',
     );
@@ -28,7 +27,6 @@ class ComposerStaticInit9bc7f1e747daad2a3908858df83d045e
         'C' => 
         array (
             'Cake\\Utility\\' => 13,
-            'Cake\\Core\\' => 10,
             'Cake\\Collection\\' => 16,
         ),
     );
@@ -49,10 +47,6 @@ class ComposerStaticInit9bc7f1e747daad2a3908858df83d045e
         'Cake\\Utility\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/utility',
-        ),
-        'Cake\\Core\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/cakephp/core',
         ),
         'Cake\\Collection\\' => 
         array (

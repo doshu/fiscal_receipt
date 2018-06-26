@@ -17,6 +17,7 @@ namespace Cake\Collection;
 use ArrayIterator;
 use InvalidArgumentException;
 use IteratorIterator;
+use LogicException;
 use Serializable;
 use Traversable;
 
@@ -72,29 +73,17 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
     }
 
     /**
-     * {@inheritDoc}
+     * Throws an exception.
      *
-     * @return int
+     * Issuing a count on a Collection can have many side effects, some making the
+     * Collection unusable after the count operation.
+     *
+     * @return void
+     * @throws \LogicException
      */
     public function count()
     {
-        $traversable = $this->optimizeUnwrap();
-
-        if (is_array($traversable)) {
-            return count($traversable);
-        }
-
-        return iterator_count($traversable);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return int
-     */
-    public function countKeys()
-    {
-        return count($this->toArray());
+        throw new LogicException('You cannot issue a count on a Collection.');
     }
 
     /**
@@ -106,7 +95,7 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
     public function __debugInfo()
     {
         return [
-            'count' => $this->count(),
+            'count' => iterator_count($this),
         ];
     }
 }

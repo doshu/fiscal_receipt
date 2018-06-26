@@ -110,128 +110,28 @@
         ]
     },
     {
-        "name": "cakephp/collection",
-        "version": "3.6.6",
-        "version_normalized": "3.6.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/cakephp/collection.git",
-            "reference": "c3cce01e8c76a98cb6149f958e9b7acae5e1aa74"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/cakephp/collection/zipball/c3cce01e8c76a98cb6149f958e9b7acae5e1aa74",
-            "reference": "c3cce01e8c76a98cb6149f958e9b7acae5e1aa74",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.6.0"
-        },
-        "time": "2018-06-10T19:23:43+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Cake\\Collection\\": "."
-            },
-            "files": [
-                "functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "CakePHP Community",
-                "homepage": "https://github.com/cakephp/collection/graphs/contributors"
-            }
-        ],
-        "description": "Work easily with arrays and iterators by having a battery of utility traversal methods",
-        "homepage": "https://cakephp.org",
-        "keywords": [
-            "arrays",
-            "cakephp",
-            "collections",
-            "iterators"
-        ]
-    },
-    {
-        "name": "cakephp/core",
-        "version": "3.6.6",
-        "version_normalized": "3.6.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/cakephp/core.git",
-            "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/cakephp/core/zipball/ad1ddaf85c88332392d999db4993ff1fb5429bea",
-            "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea",
-            "shasum": ""
-        },
-        "require": {
-            "cakephp/utility": "^3.6.0",
-            "php": ">=5.6.0"
-        },
-        "suggest": {
-            "cakephp/event": "To use PluginApplicationInterface or plugin applications."
-        },
-        "time": "2018-06-21T02:41:27+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Cake\\Core\\": "."
-            },
-            "files": [
-                "functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "CakePHP Community",
-                "homepage": "https://github.com/cakephp/core/graphs/contributors"
-            }
-        ],
-        "description": "CakePHP Framework Core classes",
-        "homepage": "https://cakephp.org",
-        "keywords": [
-            "cakephp",
-            "core",
-            "framework"
-        ]
-    },
-    {
         "name": "cakephp/utility",
-        "version": "3.6.6",
-        "version_normalized": "3.6.6.0",
+        "version": "3.5.17",
+        "version_normalized": "3.5.17.0",
         "source": {
             "type": "git",
             "url": "https://github.com/cakephp/utility.git",
-            "reference": "3478eba87128cca4755ea16b469e59d1155650cd"
+            "reference": "469289c1b547ee5f6ff91f71e1b33b2cfe006767"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/cakephp/utility/zipball/3478eba87128cca4755ea16b469e59d1155650cd",
-            "reference": "3478eba87128cca4755ea16b469e59d1155650cd",
+            "url": "https://api.github.com/repos/cakephp/utility/zipball/469289c1b547ee5f6ff91f71e1b33b2cfe006767",
+            "reference": "469289c1b547ee5f6ff91f71e1b33b2cfe006767",
             "shasum": ""
         },
         "require": {
-            "cakephp/core": "^3.6.0",
             "php": ">=5.6.0"
         },
         "suggest": {
             "ext-intl": "To use Text::transliterate() or Text::slug()",
             "lib-ICU": "To use Text::transliterate() or Text::slug()"
         },
-        "time": "2018-05-31T20:11:56+00:00",
+        "time": "2018-04-28T02:15:39+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -261,6 +161,54 @@
             "security",
             "string",
             "utility"
+        ]
+    },
+    {
+        "name": "cakephp/collection",
+        "version": "3.5.17",
+        "version_normalized": "3.5.17.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/cakephp/collection.git",
+            "reference": "d8ff1e763f96bd9aa110f5cec0cfb3df6aa6d792"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/cakephp/collection/zipball/d8ff1e763f96bd9aa110f5cec0cfb3df6aa6d792",
+            "reference": "d8ff1e763f96bd9aa110f5cec0cfb3df6aa6d792",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.6.0"
+        },
+        "time": "2017-11-15T12:37:16+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cake\\Collection\\": "."
+            },
+            "files": [
+                "functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "CakePHP Community",
+                "homepage": "https://github.com/cakephp/collection/graphs/contributors"
+            }
+        ],
+        "description": "Work easily with arrays and iterators by having a battery of utility traversal methods",
+        "homepage": "https://cakephp.org",
+        "keywords": [
+            "arrays",
+            "cakephp",
+            "collections",
+            "iterators"
         ]
     }
 ]

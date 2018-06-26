@@ -138,8 +138,7 @@ class Text
                         }
                     }
                 }
-                $tmpOffset += 1;
-                $offset = $tmpOffset;
+                $offset = ++$tmpOffset;
             } else {
                 $results[] = $buffer . mb_substr($data, $offset);
                 $offset = $length + 1;
@@ -532,7 +531,6 @@ class Text
      */
     public static function stripLinks($text)
     {
-        deprecationWarning('This method will be removed in 4.0.0.');
         do {
             $text = preg_replace('#</?a([/\s][^>]*)?(>|$)#i', '', $text, -1, $count);
         } while ($count);
@@ -879,7 +877,7 @@ class Text
         $phraseLen = mb_strlen($phrase);
         $textLen = mb_strlen($text);
 
-        $pos = mb_stripos($text, $phrase);
+        $pos = mb_strpos(mb_strtolower($text), mb_strtolower($phrase));
         if ($pos === false) {
             return mb_substr($text, 0, $radius) . $ellipsis;
         }

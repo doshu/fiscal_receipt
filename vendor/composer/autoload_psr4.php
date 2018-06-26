@@ -10,6 +10,5 @@ return array(
     'Mike42\\' => array($vendorDir . '/mike42/escpos-php/src/Mike42'),
     'Inoma\\Receipt\\' => array($baseDir . '/src'),
     'Cake\\Utility\\' => array($vendorDir . '/cakephp/utility'),
-    'Cake\\Core\\' => array($vendorDir . '/cakephp/core'),
     'Cake\\Collection\\' => array($vendorDir . '/cakephp/collection'),
 );

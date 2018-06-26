@@ -177,17 +177,17 @@ trait CollectionTrait
     /**
      * {@inheritDoc}
      */
-    public function max($callback, $type = \SORT_NUMERIC)
+    public function max($callback, $type = SORT_NUMERIC)
     {
-        return (new SortIterator($this->unwrap(), $callback, \SORT_DESC, $type))->first();
+        return (new SortIterator($this->unwrap(), $callback, SORT_DESC, $type))->first();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function min($callback, $type = \SORT_NUMERIC)
+    public function min($callback, $type = SORT_NUMERIC)
     {
-        return (new SortIterator($this->unwrap(), $callback, \SORT_ASC, $type))->first();
+        return (new SortIterator($this->unwrap(), $callback, SORT_ASC, $type))->first();
     }
 
     /**
@@ -242,7 +242,7 @@ trait CollectionTrait
     /**
      * {@inheritDoc}
      */
-    public function sortBy($callback, $dir = \SORT_DESC, $type = \SORT_NUMERIC)
+    public function sortBy($callback, $dir = SORT_DESC, $type = SORT_NUMERIC)
     {
         return new SortIterator($this->unwrap(), $callback, $dir, $type);
     }
@@ -409,42 +409,6 @@ trait CollectionTrait
         $list->append((new Collection($items))->unwrap());
 
         return new Collection($list);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function appendItem($item, $key = null)
-    {
-        if ($key !== null) {
-            $data = [$key => $item];
-        } else {
-            $data = [$item];
-        }
-
-        return $this->append($data);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function prepend($items)
-    {
-        return (new Collection($items))->append($this);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function prependItem($item, $key = null)
-    {
-        if ($key !== null) {
-            $data = [$key => $item];
-        } else {
-            $data = [$item];
-        }
-
-        return $this->prepend($data);
     }
 
     /**
@@ -761,13 +725,11 @@ trait CollectionTrait
      * Backwards compatible wrapper for unwrap()
      *
      * @return \Traversable
-     * @deprecated 3.0.10 Will be removed in 4.0.0
+     * @deprecated
      */
     // @codingStandardsIgnoreLine
     public function _unwrap()
     {
-        deprecationWarning('CollectionTrait::_unwrap() is deprecated. Use CollectionTrait::unwrap() instead.');
-
         return $this->unwrap();
     }
 
@@ -845,32 +807,6 @@ trait CollectionTrait
         }
 
         return new Collection($result);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return int
-     */
-    public function count()
-    {
-        $traversable = $this->optimizeUnwrap();
-
-        if (is_array($traversable)) {
-            return count($traversable);
-        }
-
-        return iterator_count($traversable);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return int
-     */
-    public function countKeys()
-    {
-        return count($this->toArray());
     }
 
     /**
