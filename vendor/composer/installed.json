@@ -1,58 +1,5 @@
 [
     {
-        "name": "splitbrain/php-cli",
-        "version": "1.1.2",
-        "version_normalized": "1.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/splitbrain/php-cli.git",
-            "reference": "1d6f0bf9eccbfd79d1f4d185ef27573601185c23"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/splitbrain/php-cli/zipball/1d6f0bf9eccbfd79d1f4d185ef27573601185c23",
-            "reference": "1d6f0bf9eccbfd79d1f4d185ef27573601185c23",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.5.*"
-        },
-        "suggest": {
-            "psr/log": "Allows you to make the CLI available as PSR-3 logger"
-        },
-        "time": "2018-02-02T08:46:12+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "splitbrain\\phpcli\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Andreas Gohr",
-                "email": "andi@splitbrain.org"
-            }
-        ],
-        "description": "Easy command line scripts for PHP with opt parsing and color output. No dependencies",
-        "keywords": [
-            "argparse",
-            "cli",
-            "command line",
-            "console",
-            "getopt",
-            "optparse",
-            "terminal"
-        ]
-    },
-    {
         "name": "mike42/escpos-php",
         "version": "v2.0.1",
         "version_normalized": "2.0.1.0",
@@ -110,37 +57,36 @@
         ]
     },
     {
-        "name": "cakephp/core",
-        "version": "3.6.2",
-        "version_normalized": "3.6.2.0",
+        "name": "splitbrain/php-cli",
+        "version": "1.1.4",
+        "version_normalized": "1.1.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/cakephp/core.git",
-            "reference": "680999913146ee4935aef3fd87c296c76503bae0"
+            "url": "https://github.com/splitbrain/php-cli.git",
+            "reference": "b5abc00902857f9ebcf097850d77742e1b7ceb6d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/cakephp/core/zipball/680999913146ee4935aef3fd87c296c76503bae0",
-            "reference": "680999913146ee4935aef3fd87c296c76503bae0",
+            "url": "https://api.github.com/repos/splitbrain/php-cli/zipball/b5abc00902857f9ebcf097850d77742e1b7ceb6d",
+            "reference": "b5abc00902857f9ebcf097850d77742e1b7ceb6d",
             "shasum": ""
         },
         "require": {
-            "cakephp/utility": "^3.6.0",
-            "php": ">=5.6.0"
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.5.*"
         },
         "suggest": {
-            "cakephp/event": "To use PluginApplicationInterface or plugin applications."
+            "psr/log": "Allows you to make the CLI available as PSR-3 logger"
         },
-        "time": "2018-04-24T01:48:33+00:00",
+        "time": "2018-06-26T11:34:19+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "Cake\\Core\\": "."
-            },
-            "files": [
-                "functions.php"
-            ]
+                "splitbrain\\phpcli\\": "src"
+            }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -148,71 +94,19 @@
         ],
         "authors": [
             {
-                "name": "CakePHP Community",
-                "homepage": "https://github.com/cakephp/core/graphs/contributors"
+                "name": "Andreas Gohr",
+                "email": "andi@splitbrain.org"
             }
         ],
-        "description": "CakePHP Framework Core classes",
-        "homepage": "https://cakephp.org",
+        "description": "Easy command line scripts for PHP with opt parsing and color output. No dependencies",
         "keywords": [
-            "cakephp",
-            "core",
-            "framework"
-        ]
-    },
-    {
-        "name": "cakephp/utility",
-        "version": "3.6.2",
-        "version_normalized": "3.6.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/cakephp/utility.git",
-            "reference": "590357de74b0168807a7651fa926217294d72767"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/cakephp/utility/zipball/590357de74b0168807a7651fa926217294d72767",
-            "reference": "590357de74b0168807a7651fa926217294d72767",
-            "shasum": ""
-        },
-        "require": {
-            "cakephp/core": "^3.6.0",
-            "php": ">=5.6.0"
-        },
-        "suggest": {
-            "ext-intl": "To use Text::transliterate() or Text::slug()",
-            "lib-ICU": "To use Text::transliterate() or Text::slug()"
-        },
-        "time": "2018-04-26T05:50:08+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Cake\\Utility\\": "."
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "CakePHP Community",
-                "homepage": "https://github.com/cakephp/utility/graphs/contributors"
-            }
-        ],
-        "description": "CakePHP Utility classes such as Inflector, String, Hash, and Security",
-        "homepage": "https://cakephp.org",
-        "keywords": [
-            "cakephp",
-            "hash",
-            "inflector",
-            "security",
-            "string",
-            "utility"
+            "argparse",
+            "cli",
+            "command line",
+            "console",
+            "getopt",
+            "optparse",
+            "terminal"
         ]
     },
     {
@@ -261,6 +155,112 @@
             "cakephp",
             "collections",
             "iterators"
+        ]
+    },
+    {
+        "name": "cakephp/core",
+        "version": "3.6.6",
+        "version_normalized": "3.6.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/cakephp/core.git",
+            "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/cakephp/core/zipball/ad1ddaf85c88332392d999db4993ff1fb5429bea",
+            "reference": "ad1ddaf85c88332392d999db4993ff1fb5429bea",
+            "shasum": ""
+        },
+        "require": {
+            "cakephp/utility": "^3.6.0",
+            "php": ">=5.6.0"
+        },
+        "suggest": {
+            "cakephp/event": "To use PluginApplicationInterface or plugin applications."
+        },
+        "time": "2018-06-21T02:41:27+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cake\\Core\\": "."
+            },
+            "files": [
+                "functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "CakePHP Community",
+                "homepage": "https://github.com/cakephp/core/graphs/contributors"
+            }
+        ],
+        "description": "CakePHP Framework Core classes",
+        "homepage": "https://cakephp.org",
+        "keywords": [
+            "cakephp",
+            "core",
+            "framework"
+        ]
+    },
+    {
+        "name": "cakephp/utility",
+        "version": "3.6.6",
+        "version_normalized": "3.6.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/cakephp/utility.git",
+            "reference": "3478eba87128cca4755ea16b469e59d1155650cd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/cakephp/utility/zipball/3478eba87128cca4755ea16b469e59d1155650cd",
+            "reference": "3478eba87128cca4755ea16b469e59d1155650cd",
+            "shasum": ""
+        },
+        "require": {
+            "cakephp/core": "^3.6.0",
+            "php": ">=5.6.0"
+        },
+        "suggest": {
+            "ext-intl": "To use Text::transliterate() or Text::slug()",
+            "lib-ICU": "To use Text::transliterate() or Text::slug()"
+        },
+        "time": "2018-05-31T20:11:56+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Cake\\Utility\\": "."
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "CakePHP Community",
+                "homepage": "https://github.com/cakephp/utility/graphs/contributors"
+            }
+        ],
+        "description": "CakePHP Utility classes such as Inflector, String, Hash, and Security",
+        "homepage": "https://cakephp.org",
+        "keywords": [
+            "cakephp",
+            "hash",
+            "inflector",
+            "security",
+            "string",
+            "utility"
         ]
     }
 ]
