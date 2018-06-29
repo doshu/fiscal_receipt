@@ -594,8 +594,14 @@
             foreach($this->getPayments() as &$payment) {
                 $paid = $payment->getValue()??($total > 0?max(0, $toPay):min(0, $toPay));
                 $payment->setPaid($paid);
+                $payment->setRealPaid($total > 0?min($paid, $toPay):max($paid, $toPay));
                 $toPay -= $paid;
             }
+        }
+        
+        
+        public function recalculatePaymentsTotal() {
+            $this->_rebuildPayments();
         }
         
         

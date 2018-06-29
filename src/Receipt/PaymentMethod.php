@@ -12,6 +12,7 @@
         protected $_code = null;
         protected $_hasChange = true;
         protected $_paid = null;
+        protected $_realPaid = null;
         protected $_allowNoAmount = true;
         
         public function __construct($value = null) {
@@ -66,7 +67,8 @@
         }
         
         /**
-         * metodo utilizzato dalla classe scontrino per impostare il reale pagato
+         * metodo utilizzato dalla classe scontrino per impostare il valore reale del pagamento
+         * dopo aver calcolato i pagamenti totali
          *
          * @param number $value
          * @return number
@@ -83,6 +85,29 @@
          */
         public function getPaid() {
             return $this->_paid;
+        }
+        
+        
+        /**
+         * metodo utilizzato dalla classe scontrino per impostare il reale pagato 
+         * tenendo conto del totale dello scontrino
+         *
+         * @param number $value
+         * @return number
+         */
+        public function setRealPaid($value) {
+            $this->_realPaid = $value;
+            return $this;
+        }
+        
+        /**
+         * ritorna il reale pagato con il metodo calcolato dalla classe scontrino
+         * tenendo conto del totale dello scontrino
+         *
+         * @return void
+         */
+        public function getRealPaid() {
+            return $this->_realPaid;
         }
         
     }

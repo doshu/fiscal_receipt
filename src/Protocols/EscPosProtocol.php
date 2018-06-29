@@ -263,7 +263,7 @@
         }
         
         protected function _parsePrice($value) {
-            $fmt = new \NumberFormatter( 'de_DE', \NumberFormatter::DECIMAL );
+            $fmt = new \NumberFormatter( 'it_IT', \NumberFormatter::DECIMAL );
             return $fmt->format($value).' E';
         }
         
