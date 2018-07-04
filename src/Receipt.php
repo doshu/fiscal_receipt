@@ -456,6 +456,18 @@
             return $this;
         }
         
+        
+        /**
+         * rimuove tutti gli sconti applicati al totale dello scontrino
+         *
+         * @return $this
+         */
+        public function clearDiscounts() {
+            $this->_discounts = [];
+            return $this;
+        }
+        
+        
         /**
          * aggiunge una maggiorazione al totale dello scontrino
          *
@@ -476,6 +488,17 @@
         public function getIncreases() {
             return $this->_increases;
         }
+        
+        /**
+         * rimuove tutte le maggiorazioni applicate al totale dello scontrino
+         *
+         * @return $this
+         */
+        public function clearIncreases() {
+            $this->_increases = [];
+            return $this;
+        }
+        
         
         /**
          * ritorna una maggiorazione applicata al totale dello scontrino
