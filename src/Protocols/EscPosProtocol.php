@@ -209,23 +209,13 @@
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             $desc = substr($this->s($discount->getDescription()), 0, $this->_printer->getMaxLineLength());
-            if($discount->getCode() == 'byPercentage') {
-                $line = sprintf("%s: %s", $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $discount->getValue()));
-            }
-            elseif($discount->getCode() == 'byValue') {
-                $line = sprintf("%s: %s", $desc, $this->_parsePrice($discount->getValue()));
-            }
+            $line = sprintf("%s: %s", $desc, $this->_parsePrice($discount->getRealValue()));
             $this->_printLines($line);
         }
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
             $desc = substr($this->s($increase->getDescription()), 0, $this->_printer->getMaxLineLength());
-            if($increase->getCode() == 'byPercentage') {
-                $line = sprintf("%s: %s", $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $increase->getValue()));
-            }
-            elseif($increase->getCode() == 'byValue') {
-                $line = sprintf("%s: %s", $desc, $this->_parsePrice($increase->getValue()));
-            }
+            $line = sprintf("%s: %s", $desc, $this->_parsePrice($increase->getRealValue()));
             $this->_printLines($line);
         }
         
@@ -286,6 +276,8 @@
                 foreach($aggregator->aggregate($receipt->getBody()->getItems()) as $item) {
                     $this->printItem($item);
                 }
+                
+                $receipt->getTotal(); //trigger discount and increase calculation
                 
                 foreach($receipt->getDiscounts() as $discount) {
                     $this->printReceiptDiscount($discount);
@@ -376,6 +368,7 @@
                     $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($productString));
                     $totalPieces += $product->getQty();
                 }
+                
                 
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.$this->_parsePrice($receipt->getTotal())));
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("TOTALE PEZZI ".$totalPieces));

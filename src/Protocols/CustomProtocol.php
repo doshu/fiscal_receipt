@@ -253,22 +253,12 @@
         
         public function printReceiptDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             $desc = substr($this->s($discount->getDescription()), 0, $this->_maxDescLength);
-            if($discount->getCode() == 'byPercentage') {
-                return sprintf("30013%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $discount->getValue()));
-            }
-            elseif($discount->getCode() == 'byValue') {
-                return sprintf("30013%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($discount->getValue()));
-            }
+            return sprintf("30013%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($discount->getRealValue()));
         }
         
         public function printReceiptIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
             $desc = substr($this->s($increase->getDescription()), 0, $this->_maxDescLength);
-            if($increase->getCode() == 'byPercentage') {
-                return sprintf("30012%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($this->_currentReceipt->getTotal(false) / 100 * $increase->getValue()));
-            }
-            elseif($increase->getCode() == 'byValue') {
-                return sprintf("30012%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($increase->getValue()));
-            }
+            return sprintf("30012%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($increase->getRealValue()));
         }
         
         public function sendCommand($command) {
@@ -385,6 +375,8 @@
             foreach($receipt->getFooter()->getItems() as $item) {
                 $commands->append($this->printItem($item));
             }
+            
+            $receipt->getTotal(); //trigger discounts and increases calculation
             
             foreach($receipt->getDiscounts() as $discount) {
                 $commands->append($this->printReceiptDiscount($discount));
