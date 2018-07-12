@@ -109,6 +109,7 @@
                 $string = substr($this->s($string->getValue()), 0, $this->_printer->getMaxLineLength());
                 if(isset($options['style'])) {
                     $styles = explode('|', $options['style']);
+                    
                     foreach($styles as $_style) {
                         switch($_style) {
                             case 'normal':
@@ -126,6 +127,8 @@
                             case 'invoice_total':
                                 $style = 'F';
                                 break;
+                            default:
+                                $style = 1;
                         }
                     }
                     if(in_array('center', $styles)) {
