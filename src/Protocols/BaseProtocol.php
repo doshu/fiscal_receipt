@@ -147,6 +147,44 @@
         protected function s($string) {
             return \Cake\Utility\Text::transliterate($string);
         }
+        
+        
+        protected function _getTaxSummary($receipt) {
+            $taxSummary = [];
+            foreach($receipt->getProducts() as $product) {
+                if($product->getTax() !== null) {
+                    if(!isset($taxSummary[$product->getTax()])) {
+                        $taxSummary[$product->getTax()] = 0;
+                    }
+                    $taxSummary[$product->getTax()] += $product->getFinalPrice();
+                }
+            }
+            
+            //discounts and increases taxable ripartitions
+            $getTaxable = function() use (&$taxSummary) {
+                $taxable = 0;
+                array_walk($taxSummary, function($total, $tax) use (&$taxable) {
+                    $taxable += $total / (1 + $tax/100);
+                });
+                return $taxable;
+            };
+            
+            foreach($receipt->getIncreases() as $increase) {
+                $fraction = $increase->getRealValue() / $getTaxable();
+                foreach($taxSummary as $tax => $total) {
+                    $taxSummary[$tax] += $fraction * $total / (1 + $tax/100);
+                }
+            }
+            
+            foreach($receipt->getDiscounts() as $discount) {
+                $fraction = $discount->getRealValue() / $getTaxable();
+                foreach($taxSummary as $tax => $total) {
+                    $taxSummary[$tax] -= $fraction * $total / (1 + $tax/100);
+                }
+            }
+            
+            return $taxSummary;
+        }
     }
 
 ?>

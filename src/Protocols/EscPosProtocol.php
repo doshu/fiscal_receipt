@@ -389,15 +389,7 @@
                 
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem(str_repeat('-', $this->_printer->getMaxLineLength())));
                 
-                $taxSummary = [];
-                foreach($receipt->getProducts() as $product) {
-                    if($product->getTax() !== null) {
-                        if(!isset($taxSummary[$product->getTax()])) {
-                            $taxSummary[$product->getTax()] = 0;
-                        }
-                        $taxSummary[$product->getTax()] += $product->getFinalPrice();
-                    }
-                }
+                $taxSummary = $taxSummary = $this->_getTaxSummary($receipt);
                 
                 $taxSummaryHeader = $tf->format(
                     ['*', '30%', '30%'],
