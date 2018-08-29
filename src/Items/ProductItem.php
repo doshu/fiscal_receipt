@@ -232,11 +232,12 @@
         public function getFinalPrice($applyModifier = true) {
             $this->setIntermediatePrice($this->getPrice() * $this->getQty());
             if($applyModifier) {
-                foreach($this->getDiscounts() as $discount) {
-                    $discount->apply($this);
-                }
                 foreach($this->getIncreases() as $increase) {
                     $increase->apply($this);
+                }
+                
+                foreach($this->getDiscounts() as $discount) {
+                    $discount->apply($this);
                 }
             }
             $this->setFinalPrice($this->getIntermediatePrice());

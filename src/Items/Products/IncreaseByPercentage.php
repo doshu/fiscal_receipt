@@ -2,12 +2,12 @@
 
     namespace Inoma\Receipt\Items\Products;
     
-    class IncreaseByPercentage extends PriceModifier implements ProductModifier {
+    class IncreaseByPercentage extends \Inoma\Receipt\Receipt\PriceModifier implements ProductModifier {
     
         protected $_code = "byPercentage";
         
         public function apply(\Inoma\Receipt\Items\ProductItem $product) {
-            $increase = ($product->getIntermediatePrice() / 100 * $this->getValue());
+            $increase = $this->round($product->getIntermediatePrice() / 100 * $this->getValue());
             $product->setIntermediatePrice($product->getIntermediatePrice() + $increase);
             $this->setRealValue($increase);    
         }

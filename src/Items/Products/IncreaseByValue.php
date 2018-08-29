@@ -2,7 +2,7 @@
 
     namespace Inoma\Receipt\Items\Products;
     
-    class IncreaseByValue extends PriceModifier implements ProductModifier {
+    class IncreaseByValue extends \Inoma\Receipt\Receipt\PriceModifier implements ProductModifier {
     
         protected $_code = "byValue";
         

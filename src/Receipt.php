@@ -668,12 +668,13 @@
             } 
             $this->setIntermediateTotal($this->_total);
             if($applyModifier) {
-                foreach($this->getDiscounts() as $discount) {
-                    $discount->apply($this);
-                }
-                
+            
                 foreach($this->getIncreases() as $increase) {
                     $increase->apply($this);
+                }
+                
+                foreach($this->getDiscounts() as $discount) {
+                    $discount->apply($this);
                 }
                 
                 foreach($this->getReturns() as $return) {
