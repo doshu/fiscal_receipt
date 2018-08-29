@@ -709,7 +709,7 @@
                 $paid += $paymentPay;
                 $toPay -= $paymentPay;
             }
-            return $paid;
+            return round($paid, 2);
         }
         
         /**
