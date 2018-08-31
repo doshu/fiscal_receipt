@@ -113,6 +113,7 @@
         public function printPaymentMethod(\Inoma\Receipt\Receipt\PaymentMethod $payment) {
             switch(get_class($payment)) {
                 case \Inoma\Receipt\Receipt\CashPayment::class:
+                case \Inoma\Receipt\Receipt\SelfPayment::class:
                     if($payment->getValue()) {
                         return sprintf('%sH1T', $this->_parsePrice($payment->getValue()));
                     }

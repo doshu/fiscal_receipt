@@ -474,6 +474,9 @@
                 case 'meal_voucher_with_change':
                     return 'Buono Pasto';
                     break;
+                case 'self':
+                    return 'Contanti';
+                    break;
                 default:
                     return 'Generico';
             }

@@ -212,6 +212,8 @@
                     break;
                 case \Inoma\Receipt\Receipt\GenericPayment::class:
                     return sprintf("3004%02s%s%09s", strlen("GENERICO"), "GENERICO", $this->_parsePrice($value));
+                case \Inoma\Receipt\Receipt\SelfPayment::class:
+                    return sprintf("3004%02s%s%09s", strlen("CONTANTI"), "CONTANTI", $this->_parsePrice($value));
                     break;
             }
         }
