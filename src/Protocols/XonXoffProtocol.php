@@ -36,7 +36,7 @@
                         $cmds[] = sprintf('%d*1M', $discount->getValue());
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf('%sH3M', $this->_parsePrice($discount->getValue()));
+                        $cmds[] = sprintf('%sH3M', $this->_parsePrice($discount->getValue() * $product->getQty()));
                         break;
                 }
             }
@@ -46,7 +46,7 @@
                         $cmds[] = sprintf('%d*5M', $increase->getValue());
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf('%sH7M', $this->_parsePrice($increase->getValue()));
+                        $cmds[] = sprintf('%sH7M', $this->_parsePrice($increase->getValue() * $product->getQty()));
                         break;
                 }
             }
