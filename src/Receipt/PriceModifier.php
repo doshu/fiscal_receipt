@@ -78,11 +78,11 @@
             }
             $type = $this->_round > 0?'ceil':'floor';
             $round = abs($this->_round);
-            $rounded = intval($value / $round) * $round;
+            $rounded = intval(round($value / $round, 2)) * $round;
             if($type == 'floor') {
-                return $rounded;
+                return round($rounded, 2);
             }
-            return round($value, 2) == round($rounded, 2)?$rounded:($rounded + $round);
+            return round($value, 2) == round($rounded, 2)?$rounded:round($rounded + $round, 2);
         }
         
     }
