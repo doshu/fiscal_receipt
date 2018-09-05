@@ -71,7 +71,7 @@
                         $cmds[] = sprintf("30013%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $discount->getValue()));
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf("30013%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($discount->getValue()));
+                        $cmds[] = sprintf("30013%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($discount->getValue() * $product->getQty()));
                         break;
                 }
             }
@@ -82,7 +82,7 @@
                         $cmds[] = sprintf("30012%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $increase->getValue()));
                         break;
                     case 'byValue':
-                        $cmds[] = sprintf("30012%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($increase->getValue()));
+                        $cmds[] = sprintf("30012%02s%s%09s", strlen($desc), $desc, $this->_parsePrice($increase->getValue() * $product->getQty()));
                         break;
                 }
             }

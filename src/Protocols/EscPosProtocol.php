@@ -60,7 +60,7 @@
                         $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $discount->getValue()));
                         break;
                     case 'byValue':
-                        $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($discount->getValue()));
+                        $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($discount->getValue() * $product->getQty()));
                         break;
                 }
             }
@@ -71,7 +71,7 @@
                         $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($product->getPrice() * $product->getQty() / 100 * $increase->getValue()));
                         break;
                     case 'byValue':
-                        $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($increase->getValue()));
+                        $lines[] = sprintf("%s %s", $desc, $this->_parsePrice($increase->getValue() * $product->getQty()));
                         break;
                 }
             }
