@@ -122,7 +122,7 @@
          * @param \Inoma\Receipt\Items\Products\PriceModifier $discount
          * @return $this
          */
-        public function addDiscount(\Inoma\Receipt\Items\Products\PriceModifier $discount) {
+        public function addDiscount(\Inoma\Receipt\Receipt\PriceModifier $discount) {
             $this->_discounts[Uuid::create()] = $discount;
             return $this;
         }
@@ -163,7 +163,7 @@
          * @param \Inoma\Receipt\Items\Products\PriceModifier $increase
          * @return $this
          */
-        public function addIncrease(\Inoma\Receipt\Items\Products\PriceModifier $increase) {
+        public function addIncrease(\Inoma\Receipt\Receipt\PriceModifier $increase) {
             $this->_increases[Uuid::create()] = $increase;
             return $this;
         }
