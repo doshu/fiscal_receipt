@@ -74,7 +74,7 @@
          * @return number
          */
         public function setPaid($value) {
-            $this->_paid = $value;
+            $this->_paid = round($value, 2);
             return $this;
         }
         
@@ -96,7 +96,7 @@
          * @return number
          */
         public function setRealPaid($value) {
-            $this->_realPaid = $value;
+            $this->_realPaid = round($value, 2);
             return $this;
         }
         
