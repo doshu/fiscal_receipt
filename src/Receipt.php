@@ -748,6 +748,69 @@
         }   
         
         
+        /**
+         * getTaxSummary
+         *  
+         * restituisce un array con il riepilogo delle tasse in questo formato per 
+         * ogni aliquota
+         * 
+         * [
+         *       10 => [
+         *           "total" => 3.85,
+         *           "taxable" => 3.5,
+         *           "tax" => 0.35,
+         *       ],
+         *   ]
+         *
+         *
+         * @return array
+         */
+        public function getTaxSummary() {
+            $taxSummary = [];
+            foreach($this->getProducts() as $product) {
+                if($product->getTax() !== null) {
+                    if(!isset($taxSummary[$product->getTax()])) {
+                        $taxSummary[$product->getTax()] = 0;
+                    }
+                    $taxSummary[$product->getTax()] += $product->getFinalPrice();
+                }
+            }
+            
+            //discounts and increases taxable ripartitions
+            $getTaxable = function() use (&$taxSummary) {
+                $taxable = 0;
+                array_walk($taxSummary, function($total, $tax) use (&$taxable) {
+                    $taxable += $total / (1 + $tax/100);
+                });
+                return $taxable;
+            };
+            
+            foreach($this->getIncreases() as $increase) {
+                $fraction = $increase->getRealValue() / $getTaxable();
+                foreach($taxSummary as $tax => $total) {
+                    $taxSummary[$tax] += $fraction * $total / (1 + $tax/100);
+                }
+            }
+            
+            foreach($this->getDiscounts() as $discount) {
+                $fraction = $discount->getRealValue() / $getTaxable();
+                foreach($taxSummary as $tax => $total) {
+                    $taxSummary[$tax] -= $fraction * $total / (1 + $tax/100);
+                }
+            }
+            
+            $result = [];
+            foreach($taxSummary as $tax => $total) {
+                $result[$tax] = [
+                    'total' => $total,
+                    'taxable' => round($total / (1 + $tax/100), 2),
+                    'tax' => round($total - ($total / (1 + $tax/100)), 2)
+                ];
+            }
+            
+            return $result;
+        }
+        
         public function jsonSerialize() {
             return ['total' => $this->getTotal(true), 'paid' => $this->getPaid(), 'change' => $this->getChange()] + $this->_jsonSerialize();
         }
