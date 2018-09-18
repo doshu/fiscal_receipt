@@ -786,14 +786,22 @@
             };
             
             foreach($this->getIncreases() as $increase) {
-                $fraction = $increase->getRealValue() / $getTaxable();
+                $taxable = $getTaxable();
+                if($taxable == 0) {
+                    break;
+                }
+                $fraction = $increase->getRealValue() / $taxable;
                 foreach($taxSummary as $tax => $total) {
                     $taxSummary[$tax] += $fraction * $total / (1 + $tax/100);
                 }
             }
             
             foreach($this->getDiscounts() as $discount) {
-                $fraction = $discount->getRealValue() / $getTaxable();
+                $taxable = $getTaxable();
+                if($taxable == 0) {
+                    break;
+                }
+                $fraction = $discount->getRealValue() / $taxable;
                 foreach($taxSummary as $tax => $total) {
                     $taxSummary[$tax] -= $fraction * $total / (1 + $tax/100);
                 }
