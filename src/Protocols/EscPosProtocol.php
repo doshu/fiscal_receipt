@@ -370,6 +370,25 @@
                 }
                 
                 
+                foreach($receipt->getIncreases() as $increase) {
+                    $increaseString = $tf->format(
+                        ['70%', '30%'],
+                        [$this->s($increase->getDescription()), number_format($increase->getRealValue(), 2)]
+                    );
+                    
+                    $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($increaseString));
+                }
+                
+                foreach($receipt->getDiscounts() as $discount) {
+                    $discountString = $tf->format(
+                        ['70%', '30%'],
+                        [$this->s($discount->getDescription()), number_format($discount->getRealValue(), 2)]
+                    );
+                    
+                    $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($discountString));
+                }
+                
+                
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.$this->_parsePrice($receipt->getTotal())));
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("TOTALE PEZZI ".$totalPieces));
                 

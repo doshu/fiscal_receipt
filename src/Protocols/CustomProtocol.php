@@ -469,6 +469,25 @@
                 $totalPieces += $product->getQty();
             }
             
+            foreach($receipt->getIncreases() as $increase) {
+                $increaseString = $tf->format(
+                    ['70%', '30%'],
+                    [$this->s($increase->getDescription()), number_format($increase->getRealValue(), 2)]
+                );
+                
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($increaseString));
+            }
+            
+            foreach($receipt->getDiscounts() as $discount) {
+                $discountString = $tf->format(
+                    ['70%', '30%'],
+                    [$this->s($discount->getDescription()), number_format($discount->getRealValue(), 2)]
+                );
+                
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem($discountString));
+            }
+            
+            
             if(!$printCopy) {
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\RawItem(sprintf('40031%02s%s%09s', strlen('IMPORTO EURO'), 'IMPORTO EURO', $this->_parsePrice($receipt->getTotal()))));
             }
