@@ -1,2 +1,7 @@
 /tests
 /tests/*
+/test
+/test/*
+/vendor
+/vendor/*
+.vscode

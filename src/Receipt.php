@@ -241,7 +241,7 @@
         /**
          * ritorna il numero della fattura
          *
-         * @return string
+         * @return \DateTimeInterface
          */
         public function getInvoiceDate() {
             return $this->_invoiceDate;
@@ -766,15 +766,7 @@
          * @return array
          */
         public function getTaxSummary() {
-            $taxSummary = [];
-            foreach($this->getProducts() as $product) {
-                if($product->getTax() !== null) {
-                    if(!isset($taxSummary[$product->getTax()])) {
-                        $taxSummary[$product->getTax()] = 0;
-                    }
-                    $taxSummary[$product->getTax()] += $product->getFinalPrice();
-                }
-            }
+            $taxSummary = $taxSummary = $this->_getProductTaxSummary();
             
             //discounts and increases taxable ripartitions
             $getTaxable = function() use (&$taxSummary) {
@@ -817,6 +809,69 @@
             }
             
             return $result;
+        }
+
+        protected function _getProductTaxSummary() {
+            $taxSummary = [];
+            foreach($this->getProducts() as $product) {
+                if($product->getTax() !== null) {
+                    if(!isset($taxSummary[$product->getTax()])) {
+                        $taxSummary[$product->getTax()] = 0;
+                    }
+                    $taxSummary[$product->getTax()] += $product->getFinalPrice();
+                }
+            }
+            return $taxSummary;
+        }
+
+        public function splitIncreasesAndDiscountsForRipartition() {
+            $taxSummary = $this->_getProductTaxSummary();
+            $split = ['increases' => [], 'discounts' => []];
+            
+            //discounts and increases taxable ripartitions
+            $getTaxable = function() use (&$taxSummary) {
+                $taxable = 0;
+                array_walk($taxSummary, function($total, $tax) use (&$taxable) {
+                    $taxable += $total / (1 + $tax/100);
+                });
+                return $taxable;
+            };
+            
+            foreach($this->getIncreases() as $increase) {
+                $taxable = $getTaxable();
+                if($taxable == 0) {
+                    break;
+                }
+                $fraction = $increase->getRealValue() / $taxable;
+                foreach($taxSummary as $tax => $total) {
+                    $realValue = $fraction * $total / (1 + $tax/100);
+                    $taxSummary[$tax] += $realValue;
+                    $split['increases'][] = [
+                        'increase' => $increase,
+                        'tax' => $tax,
+                        'value' => round($realValue, 2)
+                    ];
+                }
+            }
+            
+            foreach($this->getDiscounts() as $discount) {
+                $taxable = $getTaxable();
+                if($taxable == 0) {
+                    break;
+                }
+                $fraction = $discount->getRealValue() / $taxable;
+                foreach($taxSummary as $tax => $total) {
+                    $realValue = $fraction * $total / (1 + $tax/100);
+                    $taxSummary[$tax] -= $realValue;
+                    $split['discounts'][] = [
+                        'discount' => $discount,
+                        'tax' => $tax,
+                        'value' => round($realValue, 2)
+                    ];
+                }
+            }
+
+            return $split;
         }
         
         public function jsonSerialize() {

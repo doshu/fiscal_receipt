@@ -9,11 +9,18 @@
         }
     ],
     "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://inomasrl@bitbucket.org/inomasrl/fattura_elettronica.git"
+        }
+    ],
     "require": {
         "splitbrain/php-cli": "^1.1",
-        "cakephp/utility": "3.5.*",
+        "cakephp/utility": "3.*",
         "mike42/escpos-php": "^2.0",
-        "cakephp/collection": "3.5.*"
+        "cakephp/collection": "3.*",
+        "inoma/fattura_elettronica": "dev-master"
     },
     "autoload": {
         "psr-4": {

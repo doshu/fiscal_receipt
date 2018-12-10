@@ -26,6 +26,7 @@
         protected $_zip = null;
         protected $_city = null;
         protected $_province = null;
+        protected $_nation = null;
         
         public function __construct(
             $code = null,
@@ -41,7 +42,8 @@
             $birthday = null,
             $zip = null,
             $city = null,
-            $province = null
+            $province = null,
+            $nation = null
         ) {
             parent::__construct();
             $this->setCode($code);
@@ -58,6 +60,7 @@
             $this->setZip($zip);
             $this->setCity($city);
             $this->setProvince($province);
+            $this->setNation($nation);
         } 
         
         /**
@@ -181,76 +184,184 @@
             return $this->_address;
         }
         
+        /**
+         * imposta il nome del cliente
+         *
+         * @param string $name
+         * @return $this
+         */
         public function setName($name) {
             $this->_name = $name;
             return $this;
         }
         
+        /**
+         * ritorna il nome del cliente
+         *
+         * @return string
+         */
         public function getName() {
             return $this->_name;
         }
         
+        /**
+         * imposta il cognome del cliente
+         *
+         * @param string $surname
+         * @return $this
+         */
         public function setSurname($surname) {
             $this->_surname = $surname;
             return $this;
         }
         
+        /**
+         * ritorna il cognome del cliente
+         *
+         * @return string
+         */
         public function getSurname() {
             return $this->_surname;
         }
         
+        /**
+         * imposta la denominazione del cliente
+         *
+         * @param string $businessName
+         * @return $this
+         */
         public function setBusinessName($businessName) {
             $this->_businessName = $businessName;
             return $this;
         }
         
+        /**
+         * ritorna la denominazione del cliente
+         *
+         * @return string
+         */
         public function getBusinessName() {
             return $this->_businessName;
         }
         
+        /**
+         * imposta la mail del cliente
+         *
+         * @param string $email
+         * @return $this
+         */
         public function setEmail($email) {
             $this->_email = $email;
             return $this;
         }
         
+        /**
+         * ritorna la mail del cliente
+         *
+         * @return string
+         */
         public function getEmail() {
             return $this->_email;
         }
         
+        /**
+         * imposta la data di nascita del cliente
+         *
+         * @param string $birthday
+         * @return $this
+         */
         public function setBirthday($birthday) {
             $this->_birthday = $birthday;
             return $this;
         }
         
+        /**
+         * ritorna la data di nascita del cliente
+         *
+         * @return string
+         */
         public function getBirthday() {
             return $this->_birthday;
         }
         
+        /**
+         * imposta il cap del cliente
+         *
+         * @param string $zip
+         * @return $this
+         */
         public function setZip($zip) {
             $this->_zip = $zip;
             return $this;
         }
         
+        /**
+         * ritorna il cap del cliente
+         *
+         * @return string
+         */
         public function getZip() {
             return $this->_zip;
         }
         
+        /**
+         * imposta la città del cliente
+         *
+         * @param string $city
+         * @return $this
+         */
         public function setCity($city) {
             $this->_city = $city;
             return $this;
         }
         
+        /**
+         * ritorna la città del cliente
+         *
+         * @return string
+         */
         public function getCity() {
             return $this->_city;
         }
         
+        /**
+         * imposta la provincia del cliente
+         *
+         * @param string $province
+         * @return $this
+         */
         public function setProvince($province) {
             $this->_province = $province;
             return $this;
         }
         
+        /**
+         * ritorna la provincia del cliente
+         *
+         * @return string
+         */
         public function getProvince() {
             return $this->_province;
+        }
+
+        /**
+         * imposta la nazione del cliente
+         *
+         * @param string $name
+         * @return $this
+         */
+        public function setNation($nation) {
+            $this->_nation = $nation;
+            return $this;
+        }
+        
+        /**
+         * ritorna la nazione del cliente
+         *
+         * @return string
+         */
+        public function getNation() {
+            return $this->_nation;
         }
         
         public function getFullAddress() {
@@ -263,6 +374,9 @@
             }
             if($this->_province) {
                 $address .= ", ".$this->_province;
+            }
+            if($this->_nation) {
+                $address .= ", ".$this->_nation;
             }
             return $address;
         }

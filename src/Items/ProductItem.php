@@ -230,7 +230,7 @@
          * @return number
          */
         public function getFinalPrice($applyModifier = true) {
-            $this->setIntermediatePrice($this->getPrice() * $this->getQty());
+            $this->setIntermediatePrice($this->getPrice());
             if($applyModifier) {
                 foreach($this->getIncreases() as $increase) {
                     $increase->apply($this);
@@ -240,7 +240,7 @@
                     $discount->apply($this);
                 }
             }
-            $this->setFinalPrice($this->getIntermediatePrice());
+            $this->setFinalPrice($this->getIntermediatePrice() * $this->getQty());
             return $this->_finalPrice;
         }
         

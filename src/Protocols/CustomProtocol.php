@@ -204,11 +204,10 @@
                     return sprintf("3004%02s%s%09s", strlen("CARTA"), "CARTA", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\MealVoucherPayment::class:
-                    return sprintf("3004%02s%s%09s", strlen("BUONO PASTO"), "BUONO PASTO", $this->_parsePrice($value));
+                    return sprintf("3005%02s%s%09s", strlen("BUONO PASTO"), "BUONO PASTO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\CreditPayment::class:
-                    //should be 3005?
-                    return sprintf("3004%02s%s%09s", strlen("CREDITO"), "CREDITO", $this->_parsePrice($value));
+                    return sprintf("3005%02s%s%09s", strlen("CREDITO"), "CREDITO", $this->_parsePrice($value));
                     break;
                 case \Inoma\Receipt\Receipt\GenericPayment::class:
                     return sprintf("3004%02s%s%09s", strlen("GENERICO"), "GENERICO", $this->_parsePrice($value));
