@@ -26,8 +26,8 @@
         protected $_zip = null;
         protected $_city = null;
         protected $_province = null;
-        protected $_nation = null
-        protected $_pec = null
+        protected $_nation = null;
+        protected $_pec = null;
         protected $_sdiCode = null;
         
         public function __construct(
