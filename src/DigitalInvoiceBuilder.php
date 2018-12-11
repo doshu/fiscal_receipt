@@ -295,23 +295,7 @@
                 $this->_createSedeFromArray($this->_address)
             );
             
-            $clientVat = $this->_parseVat($invoiceRecipient->getVat());
-            $cessionarioCommittente = new FatturaElettronicaPR\Elements\CessionarioCommittente(
-                new FatturaElettronicaPR\Elements\DatiAnagrafici(
-                    new FatturaElettronicaPR\Elements\IdFiscaleIVA(
-                        $clientVat['country_code'], 
-                        $clientVat['vat']
-                    ),
-                    (new FatturaElettronicaPR\Elements\Anagrafica())->setDenominazione($invoiceRecipient->getBusinessName()),
-                    null
-                ),
-                new FatturaElettronicaPR\Elements\Sede(
-                    $invoiceRecipient->getAddress(),
-                    $invoiceRecipient->getZip(),
-                    $invoiceRecipient->getCity(),
-                    !empty($invoiceRecipient->getNation()) ?  $invoiceRecipient->getNation() : $this->_defaultCountryCode
-                )
-            );
+            $cessionarioCommittente = $this->_buildCessionarioCommittente($invoiceRecipient);
 
             $datiGenerali = $this->_buildGeneralData();
 
@@ -494,6 +478,49 @@
             }
 
             return $datiPagamenti;
+        }
+
+
+        protected function _buildCessionarioCommittente($invoiceRecipient) {
+            if($invoiceRecipient->getType() == 'phisical') {
+                $cessionarioCommittente = new FatturaElettronicaPR\Elements\CessionarioCommittente(
+                    (new FatturaElettronicaPR\Elements\DatiAnagrafici(
+                        null,
+                        (new FatturaElettronicaPR\Elements\Anagrafica())
+                            ->setNome($invoiceRecipient->getName())
+                            ->setCognome($invoiceRecipient->getSurname())
+                        ,
+                        null
+                    ))->setCodiceFiscale($invoiceRecipient->getCf()),
+                    new FatturaElettronicaPR\Elements\Sede(
+                        $invoiceRecipient->getAddress(),
+                        $invoiceRecipient->getZip(),
+                        $invoiceRecipient->getCity(),
+                        !empty($invoiceRecipient->getNation()) ?  $invoiceRecipient->getNation() : $this->_defaultCountryCode
+                    )
+                );
+            }
+            else {
+                $clientVat = $this->_parseVat($invoiceRecipient->getVat());
+                $cessionarioCommittente = new FatturaElettronicaPR\Elements\CessionarioCommittente(
+                    new FatturaElettronicaPR\Elements\DatiAnagrafici(
+                        new FatturaElettronicaPR\Elements\IdFiscaleIVA(
+                            $clientVat['country_code'], 
+                            $clientVat['vat']
+                        ),
+                        (new FatturaElettronicaPR\Elements\Anagrafica())->setDenominazione($invoiceRecipient->getBusinessName()),
+                        null
+                    ),
+                    new FatturaElettronicaPR\Elements\Sede(
+                        $invoiceRecipient->getAddress(),
+                        $invoiceRecipient->getZip(),
+                        $invoiceRecipient->getCity(),
+                        !empty($invoiceRecipient->getNation()) ?  $invoiceRecipient->getNation() : $this->_defaultCountryCode
+                    )
+                );
+            }
+
+            return $cessionarioCommittente;
         }
 
         /**
