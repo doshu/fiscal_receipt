@@ -283,8 +283,13 @@
                 new FatturaElettronicaPR\Elements\IdTrasmittente($this->_senderCountryCode, $this->_senderVat),
                 $progressive,
                 FatturaElettronicaPR\FatturaElettronicaPR::FORMATO_TRASMISSIONE,
-                FatturaElettronicaPR\FatturaElettronicaPR::DEFAULT_CODICE_DESTINATARIO
+                $invoiceRecipient->getSdiCode() ??
+                    FatturaElettronicaPR\FatturaElettronicaPR::DEFAULT_CODICE_DESTINATARIO
             );
+            
+            if(empty($invoiceRecipient->getSdiCode()) && !empty($invoiceRecipient->getPec())) {
+                $datiTrasmissione->setPec($invoiceRecipient->getPec());
+            }
 
             $cedentePrestatore = new FatturaElettronicaPR\Elements\CedentePrestatore(
                 (new FatturaElettronicaPR\Elements\DatiAnagrafici(
