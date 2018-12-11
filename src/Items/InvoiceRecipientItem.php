@@ -26,7 +26,9 @@
         protected $_zip = null;
         protected $_city = null;
         protected $_province = null;
-        protected $_nation = null;
+        protected $_nation = null
+        protected $_pec = null
+        protected $_sdiCode = null;
         
         public function __construct(
             $code = null,
@@ -43,7 +45,9 @@
             $zip = null,
             $city = null,
             $province = null,
-            $nation = null
+            $nation = null,
+            $pec = null,
+            $sdiCode = null
         ) {
             parent::__construct();
             $this->setCode($code);
@@ -61,6 +65,8 @@
             $this->setCity($city);
             $this->setProvince($province);
             $this->setNation($nation);
+            $this->setPec($pec);
+            $this->setSdiCode($sdiCode);
         } 
         
         /**
@@ -363,6 +369,49 @@
         public function getNation() {
             return $this->_nation;
         }
+        
+        
+        /**
+         * imposta la pec del cliente
+         *
+         * @param string $pec
+         * @return $this
+         */
+        public function setPec($pec) {
+            $this->_pec = $pec;
+            return $this;
+        }
+        
+        /**
+         * ritorna la pec del cliente
+         *
+         * @return string
+         */
+        public function getPec() {
+            return $this->_pec;
+        }
+        
+        
+        /**
+         * imposta il codice sdi del cliente
+         *
+         * @param string $sdiCode
+         * @return $this
+         */
+        public function setSdiCode($sdiCode) {
+            $this->_sdiCode = $sdiCode;
+            return $this;
+        }
+        
+        /**
+         * ritorna il codice sdi del cliente
+         *
+         * @return string
+         */
+        public function getSdiCode() {
+            return $this->_sdiCode;
+        }
+        
         
         public function getFullAddress() {
             $address = $this->_address;
