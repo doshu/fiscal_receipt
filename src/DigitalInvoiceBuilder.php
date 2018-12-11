@@ -287,10 +287,11 @@
             );
 
             $cedentePrestatore = new FatturaElettronicaPR\Elements\CedentePrestatore(
-                new FatturaElettronicaPR\Elements\DatiAnagrafici(
-                    new FatturaElettronicaPR\Elements\IdFiscaleIVA($this->_senderCountryCode, $this->_senderVat),
+                (new FatturaElettronicaPR\Elements\DatiAnagrafici(
                     (new FatturaElettronicaPR\Elements\Anagrafica())->setDenominazione($this->_denomination),
                     $this->_taxRegime
+                ))->setIdFiscaleIVA(
+                    new FatturaElettronicaPR\Elements\IdFiscaleIVA($this->_senderCountryCode, $this->_senderVat)
                 ),
                 $this->_createSedeFromArray($this->_address)
             );
@@ -485,7 +486,6 @@
             if($invoiceRecipient->getType() == 'phisical') {
                 $cessionarioCommittente = new FatturaElettronicaPR\Elements\CessionarioCommittente(
                     (new FatturaElettronicaPR\Elements\DatiAnagrafici(
-                        null,
                         (new FatturaElettronicaPR\Elements\Anagrafica())
                             ->setNome($invoiceRecipient->getName())
                             ->setCognome($invoiceRecipient->getSurname())
@@ -503,14 +503,13 @@
             else {
                 $clientVat = $this->_parseVat($invoiceRecipient->getVat());
                 $cessionarioCommittente = new FatturaElettronicaPR\Elements\CessionarioCommittente(
-                    new FatturaElettronicaPR\Elements\DatiAnagrafici(
-                        new FatturaElettronicaPR\Elements\IdFiscaleIVA(
-                            $clientVat['country_code'], 
-                            $clientVat['vat']
-                        ),
+                    (new FatturaElettronicaPR\Elements\DatiAnagrafici(
                         (new FatturaElettronicaPR\Elements\Anagrafica())->setDenominazione($invoiceRecipient->getBusinessName()),
                         null
-                    ),
+                    ))->setIdFiscaleIVA(new FatturaElettronicaPR\Elements\IdFiscaleIVA(
+                            $clientVat['country_code'], 
+                            $clientVat['vat']
+                        )),
                     new FatturaElettronicaPR\Elements\Sede(
                         $invoiceRecipient->getAddress(),
                         $invoiceRecipient->getZip(),
