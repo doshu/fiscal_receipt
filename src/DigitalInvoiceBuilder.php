@@ -283,7 +283,8 @@
                 new FatturaElettronicaPR\Elements\IdTrasmittente($this->_senderCountryCode, $this->_senderVat),
                 $progressive,
                 FatturaElettronicaPR\FatturaElettronicaPR::FORMATO_TRASMISSIONE,
-                $invoiceRecipient->getSdiCode() ??
+                $invoiceRecipient->getSdiCode()?
+                    $invoiceRecipient->getSdiCode():
                     FatturaElettronicaPR\FatturaElettronicaPR::DEFAULT_CODICE_DESTINATARIO
             );
             
