@@ -288,7 +288,7 @@
             );
             
             if(empty($invoiceRecipient->getSdiCode()) && !empty($invoiceRecipient->getPec())) {
-                $datiTrasmissione->setPec($invoiceRecipient->getPec());
+                $datiTrasmissione->setPECDestinatario($invoiceRecipient->getPec());
             }
 
             $cedentePrestatore = new FatturaElettronicaPR\Elements\CedentePrestatore(
