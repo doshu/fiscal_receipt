@@ -445,19 +445,33 @@
                     }
                 }
                 
-                for($i = 0; $i < ($printCopy?1:2); $i++) {
-                    $this->beforePrintInvoice($receipt, $commands, $printCopy);
+                $originalCopy = clone $receipt;
+                
+                if($printCopy) {
+                    $originalCopy->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('COPIA CONFORME A QUANTO'));
+                    $originalCopy->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('TRASMESSO TELEMATICAMENTE'));
+                    $toPrint = [$originalCopy];
+                }
+                else { //need a copy for the client
+                    $clientCopy = clone $receipt;
+                    $clientCopy->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('COPIA CONFORME A QUANTO'));
+                    $clientCopy->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('TRASMESSO TELEMATICAMENTE'));
+                    $toPrint = [$originalCopy, $clientCopy];
+                }
+                
+                foreach($toPrint as $_copy) {
+                    $this->beforePrintInvoice($_copy, $commands, $printCopy);
                     
-                    foreach($receipt->getHeader()->getItems() as $item) {
+                    foreach($_copy->getHeader()->getItems() as $item) {
                         $this->printItem($item);
                     }
                     
-                    foreach($receipt->getFooter()->getItems() as $item) {
+                    foreach($_copy->getFooter()->getItems() as $item) {
                         $this->printItem($item);
                     }
                 
                     $this->log('--- end invoice ---');
-                    $this->afterPrintInvoice($receipt, $commands);
+                    $this->afterPrintInvoice($_copy, $commands);
                 }
                 
                 $this->_currentReceipt = null;

@@ -547,6 +547,8 @@
                     }
                 }
             }
+            $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('COPIA CONFORME A QUANTO'));
+            $receipt->getFooter()->appendItem(new \Inoma\Receipt\Items\StringItem('TRASMESSO TELEMATICAMENTE'));
             
             foreach($receipt->getHeader()->getItems() as $item) {
                 $commands->append($this->printItem($item));
