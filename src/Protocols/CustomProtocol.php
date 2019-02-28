@@ -46,7 +46,7 @@
             }
             else {
                 $commandsCollection->prepend(sprintf('400110%09s', 0));
-                $commandsCollection->append('4002');
+                $commandsCollection->append('4004');
             }
             
         }
