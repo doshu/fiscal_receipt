@@ -372,6 +372,10 @@
                     $product->getFinalPrice() / (1 + $product->getTax() / 100), 
                     $product->getTax()
                 );
+                
+                if(!$product->getTax()) {
+                    $detailLine->setNatura(FatturaElettronicaPR\Values\Natura::NON_SOGGETTE);
+                }
 
                 $detailLine->setCodiceArticolo(new FatturaElettronicaPR\Elements\CodiceArticolo(
                     'Cod Art. fornitore',
@@ -411,6 +415,10 @@
                 );
                 $detailLine->setTipoCessionePrestazione(FatturaElettronicaPR\Elements\DettaglioLinee::TIPO_SPESA_ACCESSORIA);
                 $detailLine->setQuantita(1);
+                if(!$increase['tax']) {
+                    $detailLine->setNatura(FatturaElettronicaPR\Values\Natura::NON_SOGGETTE);
+                }
+                
                 $datiBeniServizi->addDettaglioLinee($detailLine);
 
                 $lineNumber++;
@@ -426,6 +434,10 @@
                 );
                 $detailLine->setTipoCessionePrestazione(FatturaElettronicaPR\Elements\DettaglioLinee::TIPO_SCONTO);
                 $detailLine->setQuantita(1);
+                if(!$discount['tax']) {
+                    $detailLine->setNatura(FatturaElettronicaPR\Values\Natura::NON_SOGGETTE);
+                }
+                
                 $datiBeniServizi->addDettaglioLinee($detailLine);
                 
                 $lineNumber++;
@@ -438,7 +450,11 @@
                     $taxData['taxable'],
                     $taxData['tax']
                 );
-
+                
+                if(!$tax) {
+                    $datiRiepilogo->setNatura(FatturaElettronicaPR\Values\Natura::NON_SOGGETTE);
+                }
+                
                 $datiBeniServizi->addDatiRiepilogo($datiRiepilogo);
             }
             
