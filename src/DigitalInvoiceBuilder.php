@@ -284,7 +284,7 @@
                 $progressive,
                 FatturaElettronicaPR\FatturaElettronicaPR::FORMATO_TRASMISSIONE,
                 $invoiceRecipient->getSdiCode()?
-                    $invoiceRecipient->getSdiCode():
+                    strtoupper($invoiceRecipient->getSdiCode()):
                     FatturaElettronicaPR\FatturaElettronicaPR::DEFAULT_CODICE_DESTINATARIO
             );
             
