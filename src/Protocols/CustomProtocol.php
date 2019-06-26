@@ -10,6 +10,7 @@
         protected $_ip = null;
         protected $_port = null;
         protected $_type = null;
+        protected $_response = null;
         
         private $_maxDescLength = 22;
         
@@ -276,7 +277,7 @@
 			    }
 			    $res = fread($connection, 1);
 			    fwrite($connection, "\x06");
-			    $response = $this->_readFrame();
+			    $this->_response = $this->_readFrame();
 			    return $res == "\x06";
 		    }
 		    return false;
@@ -292,7 +293,11 @@
                 $frame .= $char;
                 $timeout -= (time() - $start);
             } while($char != "\x03" && $timeout);
-            return $frame;
+            
+            $cmdLength = strlen($frame) - 7;
+            $parsedFrame = unpack("cSTX/a2CNT/aIDENT/a".$cmdLength."CMD/a2CKS/cETX", $frame);
+            
+            return $parsedFrame['CMD'];
         }
         
         protected function _getConnection() {
@@ -319,6 +324,7 @@
         public function dailyFiscalReset() {
             return $this->sendCommand("2002");       
         }
+        
         
         protected function _parsePrice($value) {
             return round($value, 2) * 100;
@@ -605,6 +611,10 @@
                 default:
                     return 'Generico';
             }
+        }
+        
+        public function _getLastCommandResponse() {
+            return $this->_response;
         }
         
     }
