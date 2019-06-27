@@ -497,7 +497,7 @@
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\RawItem(sprintf('40031%02s%s%09s', strlen('IMPORTO EURO'), 'IMPORTO EURO', $this->_parsePrice($receipt->getTotal()))));
             }
             else {
-                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.$this->_parsePrice($receipt->getTotal())));
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.number_format($receipt->getTotal(), 2)));
             }
             $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("TOTALE PEZZI ".$totalPieces));
             

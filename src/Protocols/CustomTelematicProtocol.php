@@ -41,14 +41,14 @@
             
             $commandsCollection->prepend('4002');
             if(!$printCopy) {
-                //$commandsCollection->prepend(sprintf('71023%05s', $receipt->getInvoiceNumber()));
-                $commandsCollection->prepend('7102300000');
+                $commandsCollection->prepend(sprintf('71023%05s', $receipt->getInvoiceNumber()));
+                //$commandsCollection->prepend('7102300000');
                 $commandsCollection->append('3011');
                 $commandsCollection->append('3013');
             }
             else {
                 $commandsCollection->prepend(sprintf('400110%09s', 0));
-                $commandsCollection->append('4002');
+                $commandsCollection->append('4004');
             }
             
         }
@@ -401,7 +401,7 @@
                 }
                 
                 
-                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.$this->_parsePrice($receipt->getTotal())));
+                $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem('IMPORTO EURO '.number_format($receipt->getTotal(), 2)));
                 $receipt->getHeader()->appendItem(new \Inoma\Receipt\Items\StringItem("TOTALE PEZZI ".$totalPieces));
                 
                 foreach($receipt->getPayments() as $payment) {
@@ -490,6 +490,37 @@
             
         }
         
+        //adapt the tax repartition algorithm to be the same as the printer algorithm
+        protected function _getTaxSummary($receipt) {
+            $taxSummary = [];
+            foreach($receipt->getProducts() as $product) {
+                if($product->getTax() !== null) {
+                    if(!isset($taxSummary[$product->getTax()])) {
+                        $taxSummary[$product->getTax()] = 0;
+                    }
+                    $taxSummary[$product->getTax()] += $product->getFinalPrice();
+                }
+            }
+            $onlyProductsTaxSummary = $taxSummary;
+            
+            $total = $receipt->getTotal(false);
+            
+            foreach($receipt->getIncreases() as $increase) {
+                $fraction = $increase->getRealValue() / $total;
+                foreach($taxSummary as $tax => $_taxTotal) {
+                    $taxSummary[$tax] += $fraction * $onlyProductsTaxSummary[$tax];
+                }
+            }
+            
+            foreach($receipt->getDiscounts() as $discount) {
+                $fraction = $discount->getRealValue() / $total;
+                foreach($taxSummary as $tax => $_taxTotal) {
+                    $taxSummary[$tax] -= $fraction * $onlyProductsTaxSummary[$tax];
+                }
+            }
+            
+            return $taxSummary;
+        }
         
     }
 
